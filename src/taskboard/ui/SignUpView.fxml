@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+
+<StackPane fx:id="rootPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="taskboard.ui.SignUpController">
+    <children>
+        
+        <ImageView fx:id="bgImage" fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="false">
+            <image>
+                <Image url="@image/backgrounglogin.jpg" />
+            </image>
+        </ImageView>
+
+        <AnchorPane maxHeight="650.0" maxWidth="400.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 0);">
+            <children>
+                
+                <VBox alignment="CENTER" layoutY="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <ImageView fitHeight="100.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="@image/logo.png" />
+                        </image>
+                    </ImageView>
+                </VBox>
+
+                <AnchorPane layoutY="150.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to bottom right, #a18cd1, #fbc2eb); -fx-background-radius: 0 100 100 0;" AnchorPane.bottomAnchor="140.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="120.0" />
+
+                <VBox layoutX="30.0" layoutY="180.0" prefHeight="380.0" prefWidth="340.0" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0">
+                    
+                    <HBox alignment="CENTER_LEFT" spacing="20.0">
+                        <Label onMouseClicked="#handleSwitchToLogin" style="-fx-font-size: 14px; -fx-text-fill: #999; -fx-cursor: hand;" text="Login" />
+                        <Label style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #333;" text="Sign up" />
+                        <padding>
+                            <Insets left="20.0" top="20.0" />
+                        </padding>
+                     </HBox>
+
+                    <StackPane alignment="TOP_LEFT">
+                        <padding><Insets left="80.0" /></padding>
+                         <Circle fill="#333333" radius="3.0" />
+                    </StackPane>
+
+                    <VBox spacing="12.0">
+                        <padding>
+                            <Insets left="20.0" right="20.0" top="20.0" />
+                        </padding>
+
+                        <TextField fx:id="usernameField" promptText="Username" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0; -fx-prompt-text-fill: #aaa; -fx-font-size: 14px;" />
+
+                        <TextField fx:id="emailField" promptText="Email Address" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0; -fx-prompt-text-fill: #aaa; -fx-font-size: 14px;" />
+
+                        <PasswordField fx:id="passwordField" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0; -fx-prompt-text-fill: #aaa; -fx-font-size: 14px;" />
+
+                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm Password" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-border-width: 0 0 1 0; -fx-prompt-text-fill: #aaa; -fx-font-size: 14px;" />
+                    </VBox>
+                    
+                </VBox>
+
+                <Button fx:id="signupButton" layoutX="125.0" layoutY="500.0" onAction="#handleSignUp" prefHeight="45.0" prefWidth="150.0" style="-fx-background-color: linear-gradient(to right, #a18cd1, #fbc2eb); -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-background-radius: 30; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(161, 140, 209, 0.4), 10, 0, 0, 5);" text="SIGN UP" />
+
+                <HBox alignment="CENTER" layoutY="600.0" spacing="5.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    <Label style="-fx-text-fill: #999;" text="Already have an account?" />
+                    <Label onMouseClicked="#handleSwitchToLogin" style="-fx-text-fill: #4facfe; -fx-font-weight: bold; -fx-cursor: hand;" text="LOGIN" />
+                </HBox>
+
+            </children>
+        </AnchorPane>
+    </children>
+</StackPane>

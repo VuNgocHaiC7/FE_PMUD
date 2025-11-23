@@ -25,15 +25,6 @@ javafx-sdk-*/
 *.so
 *.dylib
 
-# ============================
-# IDE SETTINGS
-# ============================
-
-# VSCode
-.vscode/
-.settings/
-.classpath
-.project
 
 # IntelliJ / IDEA
 .idea/

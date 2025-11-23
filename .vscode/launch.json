@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch JavaFX App",
+      "request": "launch",
+      "mainClass": "taskboard.MainApp",
+      "console": "internalConsole",
+      "vmArgs": "--module-path \"${workspaceFolder}/lib/javafx-sdk-23.0.2/lib\" --add-modules javafx.controls,javafx.fxml,java.desktop"
+    }
+  ]
+}

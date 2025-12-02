@@ -73,21 +73,44 @@ public class LoginController {
         }
     }
 
-    // Hàm chuyển sang màn hình chính (Dashboard/UserManagement)
-    private void switchToMainView() {
-        try {
-            // Ví dụ chuyển sang màn hình Admin User mà bạn sắp làm
-            // Đường dẫn này tùy thuộc vào file FXML bạn tạo tiếp theo
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/admin/UserManagementView.fxml"));
-            javafx.scene.Parent mainRoot = loader.load();
-            
-            // Lấy Stage hiện tại và set Scene mới
-            javafx.scene.Scene currentScene = loginButton.getScene();
-            currentScene.setRoot(mainRoot);
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Lỗi hệ thống", "Không thể tải màn hình chính: " + e.getMessage());
+    // Hàm chuyển sang màn hình chính dựa trên vai trò/tên đăng nhập
+private void switchToMainView() {
+    try {
+        String viewPath;
+        String currentUsername = usernameField.getText().trim(); // Lấy tên đăng nhập
+
+        // --- LOGIC ĐIỀU HƯỚNG ---
+        if ("admin".equals(currentUsername)) {
+            // Nếu là admin -> Vào trang Quản lý thành viên
+            viewPath = "/taskboard/ui/admin/UserManagementView.fxml";
+        } else if ("pm".equals(currentUsername)) {
+            // Nếu là pm -> Vào trang Quản lý dự án (Project)
+            viewPath = "/taskboard/ui/project/ProjectListView.fxml";
+        } else {
+            // Mặc định cho các user khác (Ví dụ cũng vào Project List)
+            viewPath = "/taskboard/ui/project/ProjectListView.fxml";
+        }
+
+        System.out.println("Đang chuyển hướng đến: " + viewPath);
+
+        // Load file FXML tương ứng
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
+        javafx.scene.Parent mainRoot = loader.load();
+        
+        // Lấy Stage hiện tại và set Scene mới
+        javafx.scene.Scene currentScene = loginButton.getScene();
+        
+        // Tùy chỉnh kích thước nếu cần (Optional)
+        // Stage stage = (Stage) currentScene.getWindow();
+        // stage.setWidth(1280);
+        // stage.setHeight(720);
+
+        currentScene.setRoot(mainRoot);
+        
+        } 
+    catch (Exception e) {
+        e.printStackTrace();
+        showAlert("Lỗi hệ thống", "Không thể tải màn hình chính (" + e.getMessage() + ")");
         }
     }
 

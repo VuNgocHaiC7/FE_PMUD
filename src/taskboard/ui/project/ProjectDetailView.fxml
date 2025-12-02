@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="taskboard.ui.project.ProjectDetailController" 
+      stylesheets="@project-styles.css"
+      prefWidth="700" prefHeight="600" style="-fx-background-color: #f8f9fa;">
+    
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 20 25; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
+        <Label text="⚙️  Cài Đặt Dự Án" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+    </HBox>
+
+    <!-- TabPane with custom style -->
+    <TabPane VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-padding: 20;">
+        <!-- Tab Thông tin chung -->
+        <Tab text="📋  Thông tin chung" closable="false">
+            <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+                <GridPane hgap="20" vgap="18">
+                    <Label text="Tên dự án:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;"/>
+                    <TextField fx:id="txtName" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="380"
+                               style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15; -fx-font-size: 14px;"/>
+
+                    <Label text="Mô tả:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;"/>
+                    <TextArea fx:id="txtDesc" prefRowCount="4" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                              style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 15; -fx-font-size: 14px;"/>
+
+                    <Label text="Trạng thái:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;"/>
+                    <ComboBox fx:id="cbStatus" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"
+                              style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8;"/>
+
+                    <Label text="Ngày bắt đầu:" GridPane.rowIndex="3" GridPane.columnIndex="0" 
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;"/>
+                    <DatePicker fx:id="dpStart" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                                style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8;"/>
+
+                    <Label text="Ngày kết thúc:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
+                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;"/>
+                    <DatePicker fx:id="dpEnd" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                                style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8;"/>
+                </GridPane>
+
+                <Separator style="-fx-background-color: #e2e8f0;"/>
+
+                <HBox spacing="12" alignment="CENTER_RIGHT">
+                    <Button text="💾  Lưu Dự Án" onAction="#handleSave" 
+                            style="-fx-background-color: #48bb78; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 12 28; -fx-background-radius: 8; -fx-cursor: hand;"/>
+                    <Button text="✖  Đóng" onAction="#handleCloseWindow"
+                            style="-fx-background-color: #e2e8f0; -fx-text-fill: #4a5568; -fx-font-size: 14px; -fx-padding: 12 24; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: 600;"/>
+                </HBox>
+            </VBox>
+        </Tab>
+
+        <!-- Tab Thành viên -->
+        <Tab text="👥  Thành viên" closable="false" fx:id="tabMembers">
+            <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
+                
+                <!-- Add Member Section -->
+                <VBox spacing="12">
+                    <Label text="Thêm thành viên mới" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                    <HBox spacing="12" alignment="CENTER_LEFT">
+                        <ComboBox fx:id="cbAllUsers" promptText="Chọn nhân viên..." prefWidth="350"
+                                  style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15;"/>
+                        <Button text="➕  Thêm vào dự án" onAction="#handleAddMember"
+                                style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 24; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: 600;"/>
+                    </HBox>
+                </VBox>
+
+                <Separator style="-fx-background-color: #e2e8f0;"/>
+
+                <!-- Members List Section -->
+                <VBox spacing="12" VBox.vgrow="ALWAYS">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Danh sách thành viên hiện tại" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+                        <Label text="0" style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-padding: 4 12; -fx-background-radius: 12; -fx-font-size: 12px; -fx-font-weight: bold;"/>
+                    </HBox>
+                    <ListView fx:id="lvMembers" VBox.vgrow="ALWAYS" 
+                              style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8;"/>
+                    <Label text="💡 Tip: Click chuột phải để xóa thành viên" 
+                           style="-fx-text-fill: #718096; -fx-font-size: 12px; -fx-font-style: italic;"/>
+                </VBox>
+            </VBox>
+        </Tab>
+    </TabPane>
+</VBox>

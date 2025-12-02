@@ -51,4 +51,10 @@ public class UserDTO {
     public void setEmail(String newEmail) { this.email.set(newEmail); }
     public void setRole(String newRole) { this.role.set(newRole); }
     public void setStatus(String newStatus) { this.status.set(newStatus); }
+    
+    // --- 4. TOSTRING (Dùng để hiển thị trong ComboBox/ListView) ---
+    @Override
+    public String toString() {
+        return getFullName() + " (" + getUsername() + ")";
+    }
 }

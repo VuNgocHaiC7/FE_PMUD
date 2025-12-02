@@ -1,0 +1,260 @@
+/* =========================================
+   RETRO CREAM THEME - ADMIN UI
+   User Management System
+   ========================================= */
+
+/* --- TỔNG THỂ --- */
+.root {
+  -fx-background-color: #f9f7f2; /* Màu kem nền chủ đạo */
+  -fx-font-family: "Georgia", "Times New Roman", serif; /* Font có chân cho tiêu đề */
+  -fx-font-size: 14px;
+  -fx-text-fill: #1f302d; /* Màu chữ xanh đen đậm */
+}
+
+/* --- TIÊU ĐỀ --- */
+.header-title {
+  -fx-font-size: 32px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #1f302d;
+  -fx-padding: 0 0 10 0;
+}
+
+/* --- TEXT FIELD (Ô tìm kiếm) --- */
+.text-field {
+  -fx-background-color: transparent;
+  -fx-border-color: #c0c0c0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 5px;
+  -fx-padding: 8px;
+  -fx-font-family: "Segoe UI", sans-serif; /* Dùng sans-serif cho ô nhập liệu cho dễ đọc */
+}
+
+.text-field:focused {
+  -fx-border-color: #1f302d;
+}
+
+/* --- TEXT AREA --- */
+.text-area {
+  -fx-background-color: transparent;
+  -fx-border-color: #c0c0c0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 5px;
+  -fx-padding: 8px;
+  -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.text-area:focused {
+  -fx-border-color: #1f302d;
+}
+
+/* --- COMBO BOX --- */
+.combo-box {
+  -fx-background-color: transparent;
+  -fx-border-color: #c0c0c0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 5px;
+  -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.combo-box:focused {
+  -fx-border-color: #1f302d;
+}
+
+/* --- NÚT BẤM CHÍNH (Create User) --- */
+.button-primary {
+  -fx-background-color: #1f302d; /* Xanh rêu đậm/Đen */
+  -fx-text-fill: #ffffff;
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-weight: bold;
+  -fx-font-size: 14px;
+  -fx-padding: 8px 20px;
+  -fx-background-radius: 5px;
+  -fx-cursor: hand;
+}
+
+.button-primary:hover {
+  -fx-background-color: #2c423f;
+}
+
+.button-secondary {
+  -fx-background-color: transparent;
+  -fx-border-color: #1f302d;
+  -fx-border-width: 1px;
+  -fx-border-radius: 5px;
+  -fx-text-fill: #1f302d;
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-weight: 600;
+  -fx-padding: 8px 20px;
+  -fx-cursor: hand;
+}
+
+.button-secondary:hover {
+  -fx-background-color: #eae6d9;
+}
+
+/* --- TABLE VIEW --- */
+.table-view {
+  -fx-background-color: transparent;
+  -fx-border-color: #b0aea0;
+  -fx-border-width: 2px;
+  -fx-border-radius: 12px;
+  -fx-background-radius: 12px;
+  -fx-padding: 1px;
+}
+
+.table-view .column-header-background {
+  -fx-background-color: #f2efe7;
+  -fx-border-color: transparent transparent #b0aea0 transparent;
+  -fx-border-width: 0 0 2px 0;
+  -fx-background-radius: 12px 12px 0 0;
+}
+
+.table-view .column-header {
+  -fx-background-color: transparent;
+  -fx-size: 50px;
+}
+
+.table-view .column-header .label {
+  -fx-text-fill: #1f302d;
+  -fx-font-weight: bold;
+  -fx-font-family: "Georgia", serif;
+  -fx-alignment: CENTER;
+  -fx-text-alignment: center;
+}
+
+/* Dòng dữ liệu */
+.table-row-cell {
+  -fx-background-color: #f9f7f2; /* Cùng màu nền */
+  -fx-border-color: transparent transparent #b0aea0 transparent; /* Chỉ kẻ đường ngang */
+  -fx-cell-size: 60px; /* Dòng cao thoáng */
+}
+
+.table-row-cell:odd {
+  -fx-background-color: #fdfbf9; /* Xen kẽ màu rất nhẹ */
+}
+
+.table-row-cell:selected {
+  -fx-background-color: #eae6d9; /* Màu highlight khi chọn */
+}
+
+.table-cell {
+  -fx-alignment: CENTER-LEFT;
+  -fx-font-family: "Segoe UI", sans-serif; /* Dữ liệu dùng sans-serif */
+  -fx-font-size: 14px;
+  -fx-text-fill: #1f302d;
+  -fx-border-color: transparent #b0aea0 transparent transparent;
+}
+
+/* --- BADGE TRẠNG THÁI (Viên thuốc) --- */
+.status-badge {
+  -fx-background-radius: 4px;
+  -fx-padding: 4px 12px;
+  -fx-font-size: 11px;
+  -fx-font-weight: bold;
+  -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* Status: ACTIVE (Xanh nhạt, chữ đen) */
+.status-success {
+  -fx-background-color: #d6ead6;
+  -fx-text-fill: #1f302d;
+}
+
+/* Status: LOCKED (Đỏ cam nhạt, chữ đỏ nâu) */
+.status-error {
+  -fx-background-color: #f5d6c6;
+  -fx-text-fill: #9c3325;
+}
+
+/* Status: NEUTRAL */
+.status-neutral {
+  -fx-background-color: #e0ded5;
+  -fx-text-fill: #1f302d;
+}
+
+/* --- ACTION BUTTONS (Dạng text link) --- */
+.action-button {
+  -fx-background-color: transparent;
+  -fx-text-fill: #1f302d;
+  -fx-font-size: 14px;
+  -fx-font-family: "Georgia", serif; /* Font có chân cho nút */
+  -fx-underline: false;
+  -fx-cursor: hand;
+  -fx-padding: 5px 10px;
+}
+
+.action-button:hover {
+  -fx-underline: true; /* Rê chuột vào thì gạch chân */
+}
+
+/* Riêng nút Lock/Unlock có thể chỉnh màu khác nếu thích */
+.lock-button-active {
+  -fx-text-fill: #1f302d;
+}
+.lock-button-locked {
+  -fx-text-fill: #1f302d;
+}
+
+/* --- TABLE ACTION BUTTONS (NÚT BẤM THỰC SỰ) --- */
+
+/* Style chung cho các nút trong bảng */
+.table-btn {
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-size: 12px;
+  -fx-font-weight: bold;
+  -fx-padding: 5px 12px;
+  -fx-background-radius: 4px;
+  -fx-cursor: hand;
+  -fx-border-width: 1px;
+}
+
+/* Nút Edit (Màu kem đậm/Xám) */
+.btn-edit {
+  -fx-background-color: #eae6d9;
+  -fx-text-fill: #1f302d;
+  -fx-border-color: #d3cec0;
+}
+.btn-edit:hover {
+  -fx-background-color: #d3cec0;
+}
+
+/* Nút Lock (Khi User đang Active -> Nút màu Đỏ nhạt để cảnh báo khóa) */
+.btn-lock {
+  -fx-background-color: #ffebe6;
+  -fx-text-fill: #de350b;
+  -fx-border-color: #ffbdad;
+}
+.btn-lock:hover {
+  -fx-background-color: #ffbdad;
+}
+
+/* Nút Unlock (Khi User đang Locked -> Nút màu Xanh để mở lại) */
+.btn-unlock {
+  -fx-background-color: #e3fcef;
+  -fx-text-fill: #006644;
+  -fx-border-color: #abf5d1;
+}
+.btn-unlock:hover {
+  -fx-background-color: #abf5d1;
+}
+
+/* --- DIALOG STYLES --- */
+.dialog-pane {
+  -fx-background-color: #f9f7f2;
+}
+
+.dialog-pane .button-bar .button {
+  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-font-weight: 600;
+}
+
+/* --- LABEL STYLES --- */
+.label {
+  -fx-text-fill: #1f302d;
+  -fx-font-family: "Segoe UI", sans-serif;
+}
+
+/* --- SEPARATOR --- */
+.separator {
+  -fx-background-color: #c0c0c0;
+}

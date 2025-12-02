@@ -7,32 +7,38 @@ import java.util.Arrays;
 public class AuthApi {
 
     // >>> QUAN TRỌNG: ĐỔI THÀNH FALSE ĐỂ GỌI SERVER THẬT <<<
-    private static final boolean IS_MOCK = false;
+    private static final boolean IS_MOCK = true;
     
     // private static final ObjectMapper mapper = new ObjectMapper();
 
     // 1. Hàm Đăng Nhập (Login)
     public static LoginResponse login(String username, String password) throws Exception {
         if (IS_MOCK) {
-            // ... (Code Mock cũ giữ nguyên để phòng hờ) ...
+            // --- LOGIC MOCK ---
             if ("admin".equals(username) && "123456".equals(password)) {
                  LoginResponse res = new LoginResponse();
-                 res.token = "mock-token"; res.fullName = "Admin Mock";
+                 res.token = "mock-token-admin"; 
+                 res.fullName = "Admin Mock";
                  return res;
+            } 
+            else if ("pm".equals(username) && "123456".equals(password)) {
+                LoginResponse res = new LoginResponse();
+                res.token = "mock-token-pm"; 
+                res.fullName = "Project Manager Mock";
+                return res;
             }
-            throw new RuntimeException("Sai thông tin (Mock)");
+            
+            // Nếu không khớp user nào thì báo lỗi (Nằm TRONG khối if IS_MOCK)
+            throw new RuntimeException("Sai thông tin (Mock) - Chỉ chấp nhận admin/123456 hoặc pm/123456");
+            
         } else {
-            // GỌI SERVER THẬT
-            // Endpoint: /auth/login (Ghép với Base URL sẽ thành .../tms/api/auth/login)
+            // --- LOGIC REAL (GỌI SERVER) ---
             String jsonBody = String.format("{\"username\": \"%s\", \"password\": \"%s\"}", username, password);
+            
+            // Gọi API
             String responseJson = ApiClient.post("/auth/login", jsonBody);
             
-            // Vì chưa có Jackson, ta parse thủ công tạm thời hoặc dùng thư viện nếu đã cài
-            // Ở đây tôi giả định bạn đã cài Jackson như hướng dẫn trước để code gọn
-            // return mapper.readValue(responseJson, LoginResponse.class);
-            
-            // NẾU CHƯA CÓ JACKSON, DÙNG TẠM CÁCH NÀY ĐỂ TRÁNH LỖI:
-            // (Chỉ dùng tạm để test kết nối, sau này nên cài Jackson)
+            // Xử lý kết quả trả về (Tạm thời mock object trả về vì chưa có Jackson)
             LoginResponse res = new LoginResponse();
             res.token = "real-token-placeholder"; 
             res.fullName = "Real User";

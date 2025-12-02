@@ -11,6 +11,7 @@ import taskboard.model.UserDTO;
 
 import java.util.List;
 import java.util.Optional;
+import javafx.beans.property.SimpleObjectProperty;
 
 public class UserManagementController {
 
@@ -23,7 +24,7 @@ public class UserManagementController {
     @FXML private TableColumn<UserDTO, String> colEmail;
     @FXML private TableColumn<UserDTO, String> colRole;
     @FXML private TableColumn<UserDTO, String> colStatus;
-    @FXML private TableColumn<UserDTO, Void> colAction;
+    @FXML private TableColumn<UserDTO, UserDTO> colAction;
 
     @FXML
     public void initialize() {
@@ -34,18 +35,21 @@ public class UserManagementController {
         Platform.runLater(() -> txtSearch.requestFocus());
     }
 
-    private void setupColumns() {
+        private void setupColumns() {
         colId.setCellValueFactory(cell -> cell.getValue().idProperty());
         colUsername.setCellValueFactory(cell -> cell.getValue().usernameProperty());
         colFullName.setCellValueFactory(cell -> cell.getValue().fullNameProperty());
         colEmail.setCellValueFactory(cell -> cell.getValue().emailProperty());
         colRole.setCellValueFactory(cell -> cell.getValue().roleProperty());
 
-        // >>> SỬA CỘT STATUS: Dùng Label bên trong để tạo hình viên thuốc <<<
+        // --- STATUS COLUMN (Badge Style) ---
         colStatus.setCellValueFactory(cell -> cell.getValue().statusProperty());
         colStatus.setCellFactory(col -> new TableCell<>() {
-            // Tạo một Label để làm badge
             private final Label badge = new Label();
+            {
+                badge.setMaxWidth(Double.MAX_VALUE);
+                setAlignment(javafx.geometry.Pos.CENTER_LEFT); 
+            }
 
             @Override
             protected void updateItem(String item, boolean empty) {
@@ -54,13 +58,10 @@ public class UserManagementController {
                     setGraphic(null);
                     setText(null);
                 } else {
-                    badge.setText(item.toUpperCase()); // Jira hay viết hoa: ACTIVE
-                    
-                    // Reset style
+                    badge.setText(item.toUpperCase());
                     badge.getStyleClass().clear();
-                    badge.getStyleClass().add("status-badge"); // Class tạo hình dáng
+                    badge.getStyleClass().add("status-badge");
 
-                    // Thêm class màu sắc
                     if ("Active".equalsIgnoreCase(item)) {
                         badge.getStyleClass().add("status-success");
                     } else if ("Locked".equalsIgnoreCase(item)) {
@@ -68,15 +69,17 @@ public class UserManagementController {
                     } else {
                         badge.getStyleClass().add("status-neutral");
                     }
-                    
-                    setGraphic(badge); // Nhét cái badge vào ô
-                    setText(null);     // Xóa text của ô đi
+                    setGraphic(badge);
+                    setText(null);
                 }
             }
         });
-        
-        // >>> SỬA CỘT ACTION: Cho nút nhỏ lại và icon hóa (nếu có) <<<
-        // (Giữ logic cũ nhưng style class trong CSS đã chỉnh nhỏ lại rồi)
+
+        // [QUAN TRỌNG - THÊM DÒNG NÀY] 
+        // Gán giá trị cho cột Action là chính đối tượng UserDTO
+        // Điều này giúp hàm addActionsColumn nhận được dữ liệu "UserDTO" thay vì "Void"
+        colAction.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
+
         addActionsColumn();
     }
     
@@ -116,86 +119,115 @@ public class UserManagementController {
         }
     }
 
-    // --- CẬP NHẬT CỘT ACTION DÙNG CSS ---
     private void addActionsColumn() {
-        colAction.setCellFactory(param -> new TableCell<>() {
+        // Lưu ý: TableCell<UserDTO, UserDTO> (Cả 2 đều là UserDTO)
+        colAction.setCellFactory(param -> new TableCell<UserDTO, UserDTO>() {
             private final Button btnEdit = new Button("Edit");
             private final Button btnLock = new Button();
-            // Tăng khoảng cách giữa 2 nút
-            private final HBox pane = new HBox(8, btnEdit, btnLock); 
+            private final HBox pane = new HBox(10, btnEdit, btnLock);
 
             {
-                // >>> ÁP DỤNG CSS CLASS CHO NÚT <<<
-                btnEdit.getStyleClass().add("action-button");
-                btnLock.getStyleClass().add("action-button");
-                pane.setStyle("-fx-alignment: CENTER;"); // Căn giữa HBox
+                pane.setStyle("-fx-alignment: CENTER;");
+                btnEdit.getStyleClass().addAll("table-btn", "btn-edit");
 
-                // Xử lý nút Sửa (Giữ nguyên logic của bạn)
+                // --- LOGIC NÚT EDIT ---
                 btnEdit.setOnAction(e -> {
-                     UserDTO selectedUser = getTableView().getItems().get(getIndex());
-                     try {
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/admin/UserDialogView.fxml"));
-                        DialogPane dialogPane = loader.load();
-                        UserDialogController dialogController = loader.getController();
-                        dialogController.setEditData(selectedUser);
-                        Dialog<ButtonType> dialog = new Dialog<>();
-                        dialog.setDialogPane(dialogPane);
-                        dialog.setTitle("Edit User");
-                        Optional<ButtonType> clickedButton = dialog.showAndWait();
-                        if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                            UserDTO formUser = dialogController.getNewUser();
-                            UserDTO userToUpdate = new UserDTO(
-                                selectedUser.getId(), selectedUser.getUsername(),
-                                formUser.getFullName(), formUser.getEmail(),
-                                formUser.getRole(), selectedUser.getStatus()
-                            );
-                            UserApi.updateUser(userToUpdate);
-                            loadData();
-                            showAlert("Success", "User updated successfully!");
-                        }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        showAlert("Error", "Error editing user: " + ex.getMessage());
+                    // Lấy user trực tiếp từ item của ô (An toàn 100%)
+                    UserDTO user = getItem(); 
+                    if (user != null) {
+                        handleEditUser(user);
                     }
                 });
 
-                // Xử lý nút Khóa/Mở khóa (Cập nhật style động)
+                // --- LOGIC NÚT LOCK/UNLOCK ---
                 btnLock.setOnAction(e -> {
-                    UserDTO user = getTableView().getItems().get(getIndex());
-                    String newStatus = "Active".equalsIgnoreCase(user.getStatus()) ? "Locked" : "Active";
-                    try {
-                        UserApi.changeStatus(user.getId(), newStatus);
-                        loadData(); 
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                        showAlert("Error", "Cannot change status: " + ex.getMessage());
+                    UserDTO user = getItem(); 
+                    if (user != null) {
+                        String currentStatus = (user.getStatus() == null) ? "" : user.getStatus().trim();
+                        boolean isActive = "Active".equalsIgnoreCase(currentStatus);
+                        String newStatus = isActive ? "Locked" : "Active";
+                        
+                        try {
+                            // 1. Gọi API cập nhật
+                            UserApi.changeStatus(user.getId(), newStatus);
+                            
+                            // 2. Cập nhật ngay lập tức vào đối tượng hiện tại trên bảng (để không phải load lại API)
+                            user.setStatus(newStatus); 
+                            
+                            // 3. [QUAN TRỌNG] Bắt buộc bảng vẽ lại dòng này
+                            // Nếu không có dòng này, cột Status tự đổi (do nó bind property), 
+                            // nhưng cột Action sẽ đứng im.
+                            tableUsers.refresh(); 
+                            
+                            // Nếu muốn chắc ăn hơn thì gọi loadData() nhưng sẽ chậm hơn
+                            // loadData(); 
+                            
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            showAlert("Error", "Cannot change status: " + ex.getMessage());
+                        }
                     }
                 });
             }
 
             @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
+            protected void updateItem(UserDTO user, boolean empty) {
+                super.updateItem(user, empty);
+
+                if (empty || user == null) {
                     setGraphic(null);
-                } else {
-                    UserDTO user = getTableView().getItems().get(getIndex());
-                    boolean isActive = "Active".equalsIgnoreCase(user.getStatus());
-                    
-                    btnLock.setText(isActive ? "Lock" : "Unlock");
-                    
-                    // >>> ĐỔI CLASS CSS CHO NÚT LOCK DỰA TRÊN TRẠNG THÁI <<<
-                    btnLock.getStyleClass().removeAll("lock-button-active", "lock-button-locked");
-                    if (isActive) {
-                        btnLock.getStyleClass().add("lock-button-active"); // Style màu đỏ nhạt
-                    } else {
-                        btnLock.getStyleClass().add("lock-button-locked"); // Style màu xanh nhạt
-                    }
-                    
-                    setGraphic(pane);
+                    return;
                 }
+
+                String status = (user.getStatus() == null) ? "" : user.getStatus().trim();
+                
+                // --- THÊM DÒNG NÀY ĐỂ DEBUG ---
+                // Nhìn vào Console khi chạy để xem nó in ra gì
+                System.out.println("User: " + user.getUsername() + " | Status: [" + status + "]");
+
+                btnLock.getStyleClass().clear();
+                btnLock.getStyleClass().add("table-btn");
+
+                // Logic: Nếu đang Active -> Phải hiện nút LOCK (Màu đỏ) để người dùng bấm vào khóa
+                if ("Active".equalsIgnoreCase(status)) {
+                    btnLock.setText("Lock");
+                    btnLock.getStyleClass().add("btn-lock");
+                } else {
+                    // Ngược lại (Locked) -> Phải hiện nút UNLOCK (Màu xanh) để mở khóa
+                    btnLock.setText("Unlock");
+                    btnLock.getStyleClass().add("btn-unlock");
+                }
+
+                setGraphic(pane);
             }
         });
+    }
+
+    private void handleEditUser(UserDTO selectedUser) {
+         try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/admin/UserDialogView.fxml"));
+            DialogPane dialogPane = loader.load();
+            UserDialogController dialogController = loader.getController();
+            dialogController.setEditData(selectedUser);
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(dialogPane);
+            dialog.setTitle("Edit User");
+            Optional<ButtonType> clickedButton = dialog.showAndWait();
+            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
+                UserDTO formUser = dialogController.getNewUser();
+                UserDTO userToUpdate = new UserDTO(
+                    selectedUser.getId(), selectedUser.getUsername(),
+                    formUser.getFullName(), formUser.getEmail(),
+                    formUser.getRole(), selectedUser.getStatus()
+                );
+                UserApi.updateUser(userToUpdate);
+                loadData();
+                showAlert("Success", "User updated successfully!");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex);
+        }
     }
 
     @FXML private void handleSearch() { loadData(); }

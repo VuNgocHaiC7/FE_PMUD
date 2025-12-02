@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="taskboard.ui.project.ProjectListController" 
+      style="-fx-background-color: #f8f9fa; -fx-padding: 25;">
+    
+    <!-- Header Section -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 12;">
+        <Label text="Quan Ly Du An" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+        
+        <!-- Search Bar -->
+        <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 10 0 0 0;">
+            <TextField fx:id="txtKeyword" promptText="Tim kiem du an theo ten..." prefWidth="320"
+                       style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15; -fx-font-size: 14px;"/>
+            
+            <ComboBox fx:id="cbStatus" promptText="Trang thai" prefWidth="160"
+                      style="-fx-background-color: #f7fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 8 12;"/>
+            
+            <Button text="Tim kiem" onAction="#handleSearch"
+                    style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10 24; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: 600;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <Button text="Tao Du An Moi" onAction="#handleNewProject" 
+                    style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 12 28; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Table Section -->
+    <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 12;">
+        <TableView fx:id="tblProjects" VBox.vgrow="ALWAYS"
+                   style="-fx-background-color: transparent; -fx-background-insets: 0; -fx-border-color: transparent; -fx-table-cell-border-color: #e2e8f0;">
+            <columns>
+                <TableColumn fx:id="colName" text="Ten Du An" minWidth="200" prefWidth="300"/>
+                <TableColumn fx:id="colPM" text="Quan ly (PM)" minWidth="150" prefWidth="200"/>
+                <TableColumn fx:id="colStatus" text="Trang thai" minWidth="120" prefWidth="150"/>
+                <TableColumn fx:id="colStart" text="Ngay bat dau" minWidth="130" prefWidth="160"/>
+                <TableColumn fx:id="colEnd" text="Ngay ket thuc" minWidth="130" prefWidth="160"/>
+            </columns>
+        </TableView>
+    </VBox>
+</VBox>

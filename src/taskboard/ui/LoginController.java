@@ -3,6 +3,8 @@ package taskboard.ui;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -10,8 +12,9 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
-// >>> IMPORT MỚI CẦN THÊM <<<
+// Import các class Auth của bạn
 import taskboard.auth.AuthApi;
 import taskboard.auth.AuthContext;
 import taskboard.auth.LoginResponse;
@@ -26,6 +29,7 @@ public class LoginController {
 
     @FXML
     public void initialize() {
+        // Binding hình nền cho đẹp, responsive theo cửa sổ
         if (bgImage != null && rootPane != null) {
             bgImage.fitWidthProperty().bind(rootPane.widthProperty());
             bgImage.fitHeightProperty().bind(rootPane.heightProperty());
@@ -34,105 +38,80 @@ public class LoginController {
 
     @FXML
     public void handleLogin(ActionEvent event) {
-        String username = usernameField.getText().trim(); // Thêm .trim() để cắt khoảng trắng thừa
-    String password = passwordField.getText();
-
-    // >>> THÊM 2 DÒNG NÀY ĐỂ DEBUG <<<
-    System.out.println("Username nhập vào: [" + username + "]");
-    System.out.println("Password nhập vào: [" + password + "]");
+        String username = usernameField.getText().trim();
+        String password = passwordField.getText();
 
         // 1. Validate sơ bộ
         if (username.isEmpty() || password.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin!");
+            showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin!", AlertType.WARNING);
             return;
         }
 
         try {
-            // 2. GỌI API ĐĂNG NHẬP (Kết nối AuthApi)
-            // Hàm này sẽ tự check Mock hoặc Real dựa trên config bên trong nó
+            // 2. GỌI API ĐĂNG NHẬP
             LoginResponse response = AuthApi.login(username, password);
 
-            // 3. LƯU THÔNG TIN VÀO CONTEXT (Quan trọng nhất)
-            // Nếu không có bước này, ApiClient sẽ không có token để dùng
+            // 3. LƯU THÔNG TIN VÀO CONTEXT
+            // Bước này cực kỳ quan trọng để dùng Token cho các API sau này
             AuthContext.getInstance().setToken(response.token);
             AuthContext.getInstance().setUserId(response.userId);
             AuthContext.getInstance().setFullName(response.fullName);
             AuthContext.getInstance().setRoles(response.roles);
 
-            // 4. Thông báo và chuyển màn hình
-            // showAlert("Thành công", "Xin chào " + response.fullName); 
-            // (Thường thì login xong sẽ chuyển cảnh luôn chứ không hiện popup)
-            
+            System.out.println("Đăng nhập thành công: " + response.fullName);
+
+            // 4. CHUYỂN SANG MÀN HÌNH CHÍNH (MAIN VIEW CÓ MENU)
             switchToMainView();
 
         } catch (Exception e) {
-            // Nếu sai pass hoặc lỗi mạng, AuthApi sẽ throw Exception
-            // Ta bắt lỗi đó để hiển thị lên màn hình
-            e.printStackTrace(); // In lỗi ra console để debug
-            showAlert("Đăng nhập thất bại", e.getMessage());
+            e.printStackTrace();
+            showAlert("Đăng nhập thất bại", "Sai tên đăng nhập hoặc mật khẩu!\n" + e.getMessage(), AlertType.ERROR);
         }
     }
 
-    // Hàm chuyển sang màn hình chính dựa trên vai trò/tên đăng nhập
-private void switchToMainView() {
-    try {
-        String viewPath;
-        String currentUsername = usernameField.getText().trim(); // Lấy tên đăng nhập
+    // --- HÀM CHUYỂN HƯỚNG QUAN TRỌNG ---
+    private void switchToMainView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/main/MainView.fxml"));
+            Parent mainRoot = loader.load();
 
-        // --- LOGIC ĐIỀU HƯỚNG ---
-        if ("admin".equals(currentUsername)) {
-            // Nếu là admin -> Vào trang Quản lý thành viên
-            viewPath = "/taskboard/ui/admin/UserManagementView.fxml";
-        } else if ("pm".equals(currentUsername)) {
-            // Nếu là pm -> Vào trang Quản lý dự án (Project)
-            viewPath = "/taskboard/ui/project/ProjectListView.fxml";
-        } else {
-            // Mặc định cho các user khác (Ví dụ cũng vào Project List)
-            viewPath = "/taskboard/ui/project/ProjectListView.fxml";
+            // 1. Đóng cửa sổ Login cũ lại
+            Stage oldStage = (Stage) loginButton.getScene().getWindow();
+            oldStage.close();
+
+            // 2. Tạo cửa sổ mới cho Main App
+            Stage newStage = new Stage();
+            newStage.setScene(new Scene(mainRoot));
+            newStage.setTitle("TaskBoard - Hệ thống quản lý công việc");
+            
+            // Mở lên là full màn hình luôn
+            newStage.setMaximized(true);
+            newStage.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        System.out.println("Đang chuyển hướng đến: " + viewPath);
-
-        // Load file FXML tương ứng
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(viewPath));
-        javafx.scene.Parent mainRoot = loader.load();
-        
-        // Lấy Stage hiện tại và set Scene mới
-        javafx.scene.Scene currentScene = loginButton.getScene();
-        
-        // Tùy chỉnh kích thước nếu cần (Optional)
-        // Stage stage = (Stage) currentScene.getWindow();
-        // stage.setWidth(1280);
-        // stage.setHeight(720);
-
-        currentScene.setRoot(mainRoot);
-        
-        } 
-    catch (Exception e) {
-        e.printStackTrace();
-        showAlert("Lỗi hệ thống", "Không thể tải màn hình chính (" + e.getMessage() + ")");
-        }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.ERROR); // Đổi thành ERROR cho dễ nhìn
-        if (title.equals("Thành công")) alert.setAlertType(AlertType.INFORMATION);
-        
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     @FXML
     public void handleSwitchToSignUp(javafx.scene.input.MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/SignUpView.fxml"));
-            javafx.scene.Parent signUpRoot = loader.load();
-            javafx.scene.Scene currentScene = ((javafx.scene.Node) event.getSource()).getScene();
+            Parent signUpRoot = loader.load();
+            Scene currentScene = ((javafx.scene.Node) event.getSource()).getScene();
             currentScene.setRoot(signUpRoot);
         } catch (Exception e) {
             e.printStackTrace();
+            showAlert("Lỗi", "Không thể chuyển sang trang đăng ký.", AlertType.ERROR);
         }
+    }
+
+    // Hàm hiển thị thông báo chung
+    private void showAlert(String title, String message, AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

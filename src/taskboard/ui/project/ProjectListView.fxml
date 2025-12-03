@@ -5,6 +5,7 @@
 
 <VBox spacing="20" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
       fx:controller="taskboard.ui.project.ProjectListController" 
+      stylesheets="@project-styles.css"
       style="-fx-background-color: #f8f9fa; -fx-padding: 25;">
     
     <!-- Header Section -->

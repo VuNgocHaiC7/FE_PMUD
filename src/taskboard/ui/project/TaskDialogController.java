@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import taskboard.api.ProjectApi;
+import taskboard.api.TaskApi;
 import taskboard.model.TaskDTO;
 import taskboard.model.UserDTO;
 
@@ -19,13 +20,15 @@ public class TaskDialogController {
     private TaskDTO currentTask;
     private Long projectId;
     private ProjectApi projectApi = new ProjectApi();
+    private TaskApi taskApi = new TaskApi();
     private boolean saved = false;
+    private Runnable onTaskSavedCallback;
 
     @FXML
     public void initialize() {
-        // Khởi tạo danh sách trạng thái
-        cbStatus.setItems(FXCollections.observableArrayList("TODO", "DOING", "DONE"));
-        cbStatus.getSelectionModel().select("TODO"); // Mặc định là TODO
+        // Khởi tạo danh sách trạng thái (cho Kanban)
+        cbStatus.setItems(FXCollections.observableArrayList("ToDo", "InProgress", "Done", "Blocked"));
+        cbStatus.getSelectionModel().select("ToDo"); // Mặc định là ToDo
 
         // Cấu hình hiển thị cho ComboBox thành viên
         cbAssignee.setCellFactory(lv -> new ListCell<UserDTO>() {
@@ -107,8 +110,14 @@ public class TaskDialogController {
         UserDTO selectedUser = cbAssignee.getValue();
         currentTask.setAssignee(selectedUser != null ? selectedUser.getFullName() : "");
 
-        saved = true;
-        closeWindow();
+        // Lưu task qua API
+        if (taskApi.saveTask(currentTask)) {
+            saved = true;
+            notifyTaskSaved();
+            closeWindow();
+        } else {
+            showAlert("Lỗi", "Không thể lưu task. Vui lòng thử lại!");
+        }
     }
 
     @FXML
@@ -137,5 +146,17 @@ public class TaskDialogController {
 
     public TaskDTO getTask() {
         return currentTask;
+    }
+
+    // Set callback để thông báo khi task được lưu
+    public void setOnTaskSaved(Runnable callback) {
+        this.onTaskSavedCallback = callback;
+    }
+
+    // Thực hiện callback sau khi lưu
+    private void notifyTaskSaved() {
+        if (onTaskSavedCallback != null) {
+            onTaskSavedCallback.run();
+        }
     }
 }

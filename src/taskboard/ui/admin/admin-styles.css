@@ -1,260 +1,290 @@
 /* =========================================
-   RETRO CREAM THEME - ADMIN UI
-   User Management System
+   USER MANAGEMENT - MODERN CLEAN THEME
+   Synchronized with Main App Design
    ========================================= */
 
-/* --- TỔNG THỂ --- */
+/* --- ROOT & GENERAL --- */
 .root {
-  -fx-background-color: #f9f7f2; /* Màu kem nền chủ đạo */
-  -fx-font-family: "Georgia", "Times New Roman", serif; /* Font có chân cho tiêu đề */
+  -fx-background-color: #f5f7fa; /* Đồng bộ với màu nền chính */
+  -fx-font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
   -fx-font-size: 14px;
-  -fx-text-fill: #1f302d; /* Màu chữ xanh đen đậm */
+  -fx-text-fill: #2c3e50;
 }
 
-/* --- TIÊU ĐỀ --- */
-.header-title {
-  -fx-font-size: 32px;
-  -fx-font-weight: bold;
-  -fx-text-fill: #1f302d;
-  -fx-padding: 0 0 10 0;
+/* --- CONTENT HEADER --- */
+.content-header {
+  -fx-background-color: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
 }
 
-/* --- TEXT FIELD (Ô tìm kiếm) --- */
-.text-field {
-  -fx-background-color: transparent;
-  -fx-border-color: #c0c0c0;
+/* --- PAGE TITLE --- */
+.page-title {
+  -fx-font-size: 24px;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2c3e50;
+}
+
+/* --- SEARCH INPUT --- */
+.search-input {
+  -fx-background-color: #f8f9fa;
+  -fx-border-color: #dee2e6;
   -fx-border-width: 1px;
-  -fx-border-radius: 5px;
-  -fx-padding: 8px;
-  -fx-font-family: "Segoe UI", sans-serif; /* Dùng sans-serif cho ô nhập liệu cho dễ đọc */
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-padding: 10px 15px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #495057;
+}
+
+.search-input:focused {
+  -fx-border-color: #667eea;
+  -fx-background-color: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
+}
+
+/* --- BUTTONS --- */
+.btn-search {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #667eea;
+  -fx-border-width: 2px;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-text-fill: #667eea;
+  -fx-font-weight: 600;
+  -fx-font-size: 14px;
+  -fx-padding: 10px 20px;
+  -fx-cursor: hand;
+}
+
+.btn-search:hover {
+  -fx-background-color: #667eea;
+  -fx-text-fill: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 10, 0, 0, 2);
+}
+
+.btn-create {
+  -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: 600;
+  -fx-font-size: 14px;
+  -fx-padding: 10px 24px;
+  -fx-background-radius: 8px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 8, 0, 0, 2);
+}
+
+.btn-create:hover {
+  -fx-background-color: linear-gradient(to right, #5568d3, #6a3f8f);
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 12, 0, 0, 3);
+  -fx-scale-x: 1.02;
+  -fx-scale-y: 1.02;
+}
+
+/* --- TEXT FIELD & TEXT AREA (Dialog) --- */
+.text-field {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #dee2e6;
+  -fx-border-width: 1px;
+  -fx-border-radius: 6px;
+  -fx-background-radius: 6px;
+  -fx-padding: 8px 12px;
+  -fx-font-size: 14px;
 }
 
 .text-field:focused {
-  -fx-border-color: #1f302d;
+  -fx-border-color: #667eea;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 6, 0, 0, 0);
 }
 
-/* --- TEXT AREA --- */
 .text-area {
-  -fx-background-color: transparent;
-  -fx-border-color: #c0c0c0;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #dee2e6;
   -fx-border-width: 1px;
-  -fx-border-radius: 5px;
-  -fx-padding: 8px;
-  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-border-radius: 6px;
+  -fx-background-radius: 6px;
+  -fx-padding: 8px 12px;
 }
 
 .text-area:focused {
-  -fx-border-color: #1f302d;
+  -fx-border-color: #667eea;
 }
 
 /* --- COMBO BOX --- */
 .combo-box {
-  -fx-background-color: transparent;
-  -fx-border-color: #c0c0c0;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #dee2e6;
   -fx-border-width: 1px;
-  -fx-border-radius: 5px;
-  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-border-radius: 6px;
+  -fx-background-radius: 6px;
 }
 
 .combo-box:focused {
-  -fx-border-color: #1f302d;
+  -fx-border-color: #667eea;
 }
 
-/* --- NÚT BẤM CHÍNH (Create User) --- */
+/* --- LEGACY BUTTON STYLES (for dialogs) --- */
 .button-primary {
-  -fx-background-color: #1f302d; /* Xanh rêu đậm/Đen */
+  -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
   -fx-text-fill: #ffffff;
-  -fx-font-family: "Segoe UI", sans-serif;
-  -fx-font-weight: bold;
+  -fx-font-weight: 600;
   -fx-font-size: 14px;
   -fx-padding: 8px 20px;
-  -fx-background-radius: 5px;
+  -fx-background-radius: 6px;
   -fx-cursor: hand;
 }
 
 .button-primary:hover {
-  -fx-background-color: #2c423f;
+  -fx-background-color: linear-gradient(to right, #5568d3, #6a3f8f);
 }
 
 .button-secondary {
-  -fx-background-color: transparent;
-  -fx-border-color: #1f302d;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #dee2e6;
   -fx-border-width: 1px;
-  -fx-border-radius: 5px;
-  -fx-text-fill: #1f302d;
-  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-border-radius: 6px;
+  -fx-background-radius: 6px;
+  -fx-text-fill: #495057;
   -fx-font-weight: 600;
   -fx-padding: 8px 20px;
   -fx-cursor: hand;
 }
 
 .button-secondary:hover {
-  -fx-background-color: #eae6d9;
+  -fx-background-color: #f8f9fa;
+  -fx-border-color: #667eea;
+  -fx-text-fill: #667eea;
 }
 
 /* --- TABLE VIEW --- */
 .table-view {
-  -fx-background-color: transparent;
-  -fx-border-color: #b0aea0;
-  -fx-border-width: 2px;
-  -fx-border-radius: 12px;
-  -fx-background-radius: 12px;
-  -fx-padding: 1px;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #dee2e6;
+  -fx-border-width: 1px;
+  -fx-border-radius: 10px;
+  -fx-background-radius: 10px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 0, 2);
 }
 
 .table-view .column-header-background {
-  -fx-background-color: #f2efe7;
-  -fx-border-color: transparent transparent #b0aea0 transparent;
+  -fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+  -fx-border-color: transparent transparent #dee2e6 transparent;
   -fx-border-width: 0 0 2px 0;
-  -fx-background-radius: 12px 12px 0 0;
+  -fx-background-radius: 10px 10px 0 0;
 }
 
 .table-view .column-header {
   -fx-background-color: transparent;
-  -fx-size: 50px;
+  -fx-size: 45px;
 }
 
 .table-view .column-header .label {
-  -fx-text-fill: #1f302d;
-  -fx-font-weight: bold;
-  -fx-font-family: "Georgia", serif;
-  -fx-alignment: CENTER;
-  -fx-text-alignment: center;
+  -fx-text-fill: #495057;
+  -fx-font-weight: 600;
+  -fx-font-size: 13px;
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 0 0 0 10;
 }
 
-/* Dòng dữ liệu */
 .table-row-cell {
-  -fx-background-color: #f9f7f2; /* Cùng màu nền */
-  -fx-border-color: transparent transparent #b0aea0 transparent; /* Chỉ kẻ đường ngang */
-  -fx-cell-size: 60px; /* Dòng cao thoáng */
+  -fx-background-color: #ffffff;
+  -fx-border-color: transparent transparent #f1f3f5 transparent;
+  -fx-cell-size: 50px;
 }
 
 .table-row-cell:odd {
-  -fx-background-color: #fdfbf9; /* Xen kẽ màu rất nhẹ */
+  -fx-background-color: #f8f9fa;
 }
 
 .table-row-cell:selected {
-  -fx-background-color: #eae6d9; /* Màu highlight khi chọn */
+  -fx-background-color: #e7f0ff;
+}
+
+.table-row-cell:hover {
+  -fx-background-color: #f0f4ff;
 }
 
 .table-cell {
-  -fx-alignment: CENTER-LEFT;
-  -fx-font-family: "Segoe UI", sans-serif; /* Dữ liệu dùng sans-serif */
+  -fx-alignment: CENTER_LEFT;
   -fx-font-size: 14px;
-  -fx-text-fill: #1f302d;
-  -fx-border-color: transparent #b0aea0 transparent transparent;
+  -fx-text-fill: #212529;
+  -fx-padding: 0 10 0 10;
 }
 
-/* --- BADGE TRẠNG THÁI (Viên thuốc) --- */
+/* --- STATUS BADGES --- */
 .status-badge {
-  -fx-background-radius: 4px;
-  -fx-padding: 4px 12px;
-  -fx-font-size: 11px;
-  -fx-font-weight: bold;
-  -fx-font-family: "Segoe UI", sans-serif;
-}
-
-/* Status: ACTIVE (Xanh nhạt, chữ đen) */
-.status-success {
-  -fx-background-color: #d6ead6;
-  -fx-text-fill: #1f302d;
-}
-
-/* Status: LOCKED (Đỏ cam nhạt, chữ đỏ nâu) */
-.status-error {
-  -fx-background-color: #f5d6c6;
-  -fx-text-fill: #9c3325;
-}
-
-/* Status: NEUTRAL */
-.status-neutral {
-  -fx-background-color: #e0ded5;
-  -fx-text-fill: #1f302d;
-}
-
-/* --- ACTION BUTTONS (Dạng text link) --- */
-.action-button {
-  -fx-background-color: transparent;
-  -fx-text-fill: #1f302d;
-  -fx-font-size: 14px;
-  -fx-font-family: "Georgia", serif; /* Font có chân cho nút */
-  -fx-underline: false;
-  -fx-cursor: hand;
-  -fx-padding: 5px 10px;
-}
-
-.action-button:hover {
-  -fx-underline: true; /* Rê chuột vào thì gạch chân */
-}
-
-/* Riêng nút Lock/Unlock có thể chỉnh màu khác nếu thích */
-.lock-button-active {
-  -fx-text-fill: #1f302d;
-}
-.lock-button-locked {
-  -fx-text-fill: #1f302d;
-}
-
-/* --- TABLE ACTION BUTTONS (NÚT BẤM THỰC SỰ) --- */
-
-/* Style chung cho các nút trong bảng */
-.table-btn {
-  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-background-radius: 12px;
+  -fx-padding: 5px 14px;
   -fx-font-size: 12px;
-  -fx-font-weight: bold;
-  -fx-padding: 5px 12px;
-  -fx-background-radius: 4px;
-  -fx-cursor: hand;
-  -fx-border-width: 1px;
+  -fx-font-weight: 600;
 }
 
-/* Nút Edit (Màu kem đậm/Xám) */
+.status-success {
+  -fx-background-color: #d1f4e0;
+  -fx-text-fill: #0f5132;
+}
+
+.status-error {
+  -fx-background-color: #ffd8d8;
+  -fx-text-fill: #842029;
+}
+
+.status-neutral {
+  -fx-background-color: #e9ecef;
+  -fx-text-fill: #495057;
+}
+
+/* --- TABLE ACTION BUTTONS --- */
+.table-btn {
+  -fx-font-size: 13px;
+  -fx-font-weight: 600;
+  -fx-padding: 6px 16px;
+  -fx-background-radius: 6px;
+  -fx-cursor: hand;
+  -fx-border-width: 0;
+}
+
 .btn-edit {
-  -fx-background-color: #eae6d9;
-  -fx-text-fill: #1f302d;
-  -fx-border-color: #d3cec0;
+  -fx-background-color: #e7f0ff;
+  -fx-text-fill: #0d6efd;
 }
 .btn-edit:hover {
-  -fx-background-color: #d3cec0;
+  -fx-background-color: #cfe2ff;
+  -fx-effect: dropshadow(gaussian, rgba(13, 110, 253, 0.3), 6, 0, 0, 1);
 }
 
-/* Nút Lock (Khi User đang Active -> Nút màu Đỏ nhạt để cảnh báo khóa) */
 .btn-lock {
-  -fx-background-color: #ffebe6;
-  -fx-text-fill: #de350b;
-  -fx-border-color: #ffbdad;
+  -fx-background-color: #ffe8e8;
+  -fx-text-fill: #dc3545;
 }
 .btn-lock:hover {
-  -fx-background-color: #ffbdad;
+  -fx-background-color: #ffd1d1;
+  -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.3), 6, 0, 0, 1);
 }
 
-/* Nút Unlock (Khi User đang Locked -> Nút màu Xanh để mở lại) */
 .btn-unlock {
-  -fx-background-color: #e3fcef;
-  -fx-text-fill: #006644;
-  -fx-border-color: #abf5d1;
+  -fx-background-color: #d1f4e0;
+  -fx-text-fill: #198754;
 }
 .btn-unlock:hover {
-  -fx-background-color: #abf5d1;
+  -fx-background-color: #baedc7;
+  -fx-effect: dropshadow(gaussian, rgba(25, 135, 84, 0.3), 6, 0, 0, 1);
 }
 
 /* --- DIALOG STYLES --- */
 .dialog-pane {
-  -fx-background-color: #f9f7f2;
+  -fx-background-color: #ffffff;
 }
 
 .dialog-pane .button-bar .button {
-  -fx-font-family: "Segoe UI", sans-serif;
   -fx-font-weight: 600;
 }
 
 /* --- LABEL STYLES --- */
 .label {
-  -fx-text-fill: #1f302d;
-  -fx-font-family: "Segoe UI", sans-serif;
+  -fx-text-fill: #212529;
 }
 
 /* --- SEPARATOR --- */
 .separator {
-  -fx-background-color: #c0c0c0;
+  -fx-background-color: #dee2e6;
 }

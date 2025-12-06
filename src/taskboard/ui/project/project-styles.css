@@ -1,67 +1,207 @@
 /* ============================================
    PROJECT MANAGEMENT - MODERN UI STYLES
+   Synchronized with Main App Theme
    ============================================ */
 
 /* Global Styles */
 .root {
-  -fx-font-family: "Segoe UI", Arial, sans-serif;
+  -fx-background-color: #f5f7fa;
+  -fx-font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  -fx-font-size: 14px;
+  -fx-text-fill: #2c3e50;
 }
 
-/* ============================================
-   BUTTONS - Modern Button Styles
-   ============================================ */
+/* Content Header */
+.content-header {
+  -fx-background-color: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
+}
 
-.button {
-  -fx-cursor: hand;
-  -fx-border-width: 0;
+/* Page Title */
+.page-title {
+  -fx-font-size: 24px;
+  -fx-font-weight: 600;
+  -fx-text-fill: #2c3e50;
+}
+
+/* Search Input */
+.search-input {
+  -fx-background-color: #f8f9fa;
+  -fx-border-color: #dee2e6;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-padding: 10px 15px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #495057;
+}
+
+.search-input:focused {
+  -fx-border-color: #667eea;
+  -fx-background-color: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
+}
+
+/* Combo Filter - Modern Design */
+.combo-filter {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #667eea;
+  -fx-border-width: 2px;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-padding: 9px 15px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #667eea;
   -fx-font-weight: 600;
 }
 
-.button:hover {
-  -fx-opacity: 0.9;
-  -fx-scale-y: 1.02;
-  -fx-scale-x: 1.02;
+.combo-filter:focused {
+  -fx-border-color: #667eea;
+  -fx-background-color: #f8f9ff;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
 }
 
-.button:pressed {
-  -fx-scale-y: 0.98;
-  -fx-scale-x: 0.98;
+.combo-filter:hover {
+  -fx-background-color: #f8f9ff;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.15), 6, 0, 0, 1);
 }
 
-/* Primary Button */
-.button-primary {
-  -fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%);
-  -fx-text-fill: white;
-  -fx-background-radius: 8;
-  -fx-padding: 12 28;
+/* ComboBox Arrow Button */
+.combo-filter .arrow-button {
+  -fx-background-color: transparent;
+  -fx-padding: 0 8 0 8;
+}
+
+.combo-filter .arrow {
+  -fx-background-color: #667eea;
+  -fx-shape: "M 0 0 L 4 4 L 8 0 Z";
+  -fx-scale-x: 0.8;
+  -fx-scale-y: 0.8;
+}
+
+/* ComboBox Text */
+.combo-filter .text-input {
+  -fx-text-fill: #667eea;
+  -fx-font-weight: 600;
+}
+
+/* ComboBox Cell (Selected Value Display) */
+.combo-filter .list-cell {
+  -fx-padding: 0;
+  -fx-text-fill: #667eea;
+  -fx-font-weight: 600;
+  -fx-background-color: transparent;
+}
+
+/* ComboBox Popup/Dropdown */
+.combo-filter .list-view {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #667eea;
+  -fx-border-width: 2px;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.25), 16, 0, 0, 4);
+  -fx-padding: 8px 0;
+}
+
+/* Dropdown Items */
+.combo-filter .list-view .list-cell {
+  -fx-padding: 12px 20px;
   -fx-font-size: 14px;
+  -fx-text-fill: #2c3e50;
+  -fx-background-color: transparent;
+  -fx-font-weight: 500;
+}
+
+.combo-filter .list-view .list-cell:hover {
+  -fx-background-color: #e7f0ff;
+  -fx-text-fill: #667eea;
+  -fx-font-weight: 600;
+}
+
+.combo-filter .list-view .list-cell:selected {
+  -fx-background-color: #667eea;
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: 600;
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+
+.btn-search {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #667eea;
+  -fx-border-width: 2px;
+  -fx-border-radius: 8px;
+  -fx-background-radius: 8px;
+  -fx-text-fill: #667eea;
+  -fx-font-weight: 600;
+  -fx-font-size: 14px;
+  -fx-padding: 10px 20px;
+  -fx-cursor: hand;
+}
+
+.btn-search:hover {
+  -fx-background-color: #667eea;
+  -fx-text-fill: #ffffff;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 10, 0, 0, 2);
+}
+
+.btn-create {
+  -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: 600;
+  -fx-font-size: 14px;
+  -fx-padding: 10px 24px;
+  -fx-background-radius: 8px;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 8, 0, 0, 2);
+}
+
+.btn-create:hover {
+  -fx-background-color: linear-gradient(to right, #5568d3, #6a3f8f);
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 12, 0, 0, 3);
+  -fx-scale-x: 1.02;
+  -fx-scale-y: 1.02;
+}
+
+/* Legacy Button Styles */
+.button-primary {
+  -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+  -fx-text-fill: white;
+  -fx-background-radius: 8px;
+  -fx-padding: 12px 28px;
+  -fx-font-size: 14px;
+  -fx-font-weight: 600;
+  -fx-cursor: hand;
   -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 8, 0, 0, 3);
 }
 
-/* Success Button */
 .button-success {
   -fx-background-color: #48bb78;
   -fx-text-fill: white;
-  -fx-background-radius: 8;
-  -fx-padding: 10 24;
+  -fx-background-radius: 8px;
+  -fx-padding: 10px 24px;
+  -fx-cursor: hand;
   -fx-effect: dropshadow(gaussian, rgba(72, 187, 120, 0.3), 6, 0, 0, 2);
 }
 
-/* Danger Button */
 .button-danger {
   -fx-background-color: #ff6b6b;
   -fx-text-fill: white;
-  -fx-background-radius: 8;
-  -fx-padding: 10 24;
+  -fx-background-radius: 8px;
+  -fx-padding: 10px 24px;
+  -fx-cursor: hand;
   -fx-effect: dropshadow(gaussian, rgba(255, 107, 107, 0.3), 6, 0, 0, 2);
 }
 
-/* Secondary Button */
 .button-secondary {
   -fx-background-color: #e2e8f0;
   -fx-text-fill: #4a5568;
-  -fx-background-radius: 8;
-  -fx-padding: 10 24;
+  -fx-background-radius: 8px;
+  -fx-padding: 10px 24px;
+  -fx-cursor: hand;
 }
 
 /* ============================================
@@ -101,35 +241,130 @@
 }
 
 /* ============================================
-   TABLE VIEW
+   TABLE VIEW (MATCHING USER MANAGEMENT)
    ============================================ */
 
 .table-view {
-  -fx-background-color: transparent;
-  -fx-table-cell-border-color: #e2e8f0;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #dee2e6;
+  -fx-border-width: 1px;
+  -fx-border-radius: 10px;
+  -fx-background-radius: 10px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 10, 0, 0, 2);
+}
+
+.table-view .column-header-background {
+  -fx-background-color: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+  -fx-border-color: transparent transparent #dee2e6 transparent;
+  -fx-border-width: 0 0 2px 0;
+  -fx-background-radius: 10px 10px 0 0;
 }
 
 .table-view .column-header {
-  -fx-background-color: #f7fafc;
-  -fx-font-weight: bold;
-  -fx-font-size: 13px;
-  -fx-text-fill: #4a5568;
-  -fx-padding: 12 8;
+  -fx-background-color: transparent;
+  -fx-size: 45px;
 }
 
-.table-view .table-cell {
-  -fx-padding: 12 8;
+.table-view .column-header .label {
+  -fx-text-fill: #495057;
+  -fx-font-weight: 600;
   -fx-font-size: 13px;
+  -fx-alignment: CENTER_LEFT;
+  -fx-padding: 0 0 0 10;
 }
 
-.table-row-cell:hover {
-  -fx-background-color: #f7fafc;
+.table-row-cell {
+  -fx-background-color: #ffffff;
+  -fx-border-color: transparent transparent #f1f3f5 transparent;
+  -fx-cell-size: 50px;
+}
+
+.table-row-cell:odd {
+  -fx-background-color: #f8f9fa;
 }
 
 .table-row-cell:selected {
-  -fx-background-color: #e6f2ff;
-  -fx-text-fill: #2d3748;
+  -fx-background-color: #e7f0ff;
 }
+
+.table-row-cell:hover {
+  -fx-background-color: #f0f4ff;
+}
+
+.table-cell {
+  -fx-alignment: CENTER_LEFT;
+  -fx-font-size: 14px;
+  -fx-text-fill: #212529;
+  -fx-padding: 0 10 0 10;
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
+
+.status-badge {
+  -fx-background-radius: 12px;
+  -fx-padding: 5px 14px;
+  -fx-font-size: 12px;
+  -fx-font-weight: 600;
+}
+
+.status-planning {
+  -fx-background-color: #fff3cd;
+  -fx-text-fill: #856404;
+}
+
+.status-in-progress {
+  -fx-background-color: #d1ecf1;
+  -fx-text-fill: #0c5460;
+}
+
+.status-closed {
+  -fx-background-color: #d4edda;
+  -fx-text-fill: #155724;
+}
+
+/* --- TABLE ACTION BUTTONS --- */
+.table-btn {
+  -fx-font-size: 12px;
+  -fx-font-weight: 600;
+  -fx-padding: 7px 12px;
+  -fx-background-radius: 6px;
+  -fx-cursor: hand;
+  -fx-border-width: 0;
+  -fx-min-width: 50px;
+  -fx-pref-width: 55px;
+  -fx-max-width: 60px;
+}
+
+.btn-edit {
+  -fx-background-color: #e7f0ff;
+  -fx-text-fill: #0d6efd;
+}
+.btn-edit:hover {
+  -fx-background-color: #cfe2ff;
+  -fx-effect: dropshadow(gaussian, rgba(13, 110, 253, 0.3), 6, 0, 0, 1);
+}
+
+.btn-delete {
+  -fx-background-color: #ffe8e8;
+  -fx-text-fill: #dc3545;
+}
+.btn-delete:hover {
+  -fx-background-color: #ffd1d1;
+  -fx-effect: dropshadow(gaussian, rgba(220, 53, 69, 0.3), 6, 0, 0, 1);
+}
+
+.btn-view {
+  -fx-background-color: #e8f5e9;
+  -fx-text-fill: #2e7d32;
+}
+.btn-view:hover {
+  -fx-background-color: #c8e6c9;
+  -fx-effect: dropshadow(gaussian, rgba(46, 125, 50, 0.3), 6, 0, 0, 1);
+}
+
+/* Legacy styles removed - now using unified table styles above */
 
 /* ============================================
    LIST VIEW - Task Cards
@@ -304,4 +539,58 @@
 .badge-light {
   -fx-background-color: #e2e8f0;
   -fx-text-fill: #4a5568;
+}
+
+/* Nhãn tiêu đề trên mỗi ô nhập liệu */
+.field-label {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #4a5568;
+}
+
+/* ComboBox trong Form (để giống với TextField) */
+.form-combo {
+  -fx-background-color: white;
+  -fx-border-color: #ced4da;
+  -fx-border-radius: 4;
+  -fx-background-radius: 4;
+  -fx-padding: 2 6;
+  -fx-font-size: 14px;
+}
+
+/* Khi bấm vào hoặc di chuột vào ô chính */
+.form-combo:focused,
+.form-combo:hover {
+  -fx-border-color: #0097e6; /* Chỉ đổi màu viền */
+  -fx-background-color: white; /* Nền vẫn trắng */
+}
+
+/* Đảm bảo chữ trong ô chính luôn màu đen xám */
+.form-combo .list-cell {
+  -fx-text-fill: #2d3748;
+  -fx-background-color: transparent;
+}
+
+/* 2. Phần danh sách xổ xuống (Popup) */
+.form-combo .list-view {
+  -fx-background-color: white;
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.15), 8, 0, 0, 2);
+  -fx-padding: 0;
+}
+
+/* 3. Các dòng trong danh sách xổ xuống */
+.form-combo .list-view .list-cell {
+  -fx-padding: 8px 12px;
+  -fx-text-fill: #2d3748;
+  -fx-background-color: white;
+}
+
+/* 4. CHỈ TÔ MÀU KHI DI CHUỘT TRONG DANH SÁCH XỔ XUỐNG */
+/* Lưu ý: Có thêm class .list-view ở đầu để không ảnh hưởng ô chính */
+.form-combo .list-view .list-cell:filled:selected,
+.form-combo .list-view .list-cell:filled:hover {
+  -fx-background-color: #0097e6; /* Màu nền xanh */
+  -fx-background: #0097e6;
+  -fx-text-fill: white; /* Chữ trắng */
+  -fx-cursor: hand;
 }

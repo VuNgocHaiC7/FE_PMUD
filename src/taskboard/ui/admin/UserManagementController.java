@@ -58,7 +58,15 @@ public class UserManagementController {
                     setGraphic(null);
                     setText(null);
                 } else {
-                    badge.setText(item.toUpperCase());
+                    // Hiển thị tiếng Việt cho status
+                    String displayText = item;
+                    if ("Active".equalsIgnoreCase(item)) {
+                        displayText = "HOẠT ĐỘNG";
+                    } else if ("Locked".equalsIgnoreCase(item)) {
+                        displayText = "BỊ KHÓA";
+                    }
+                    
+                    badge.setText(displayText);
                     badge.getStyleClass().clear();
                     badge.getStyleClass().add("status-badge");
 
@@ -91,7 +99,7 @@ public class UserManagementController {
                 Platform.runLater(() -> tableUsers.setItems(FXCollections.observableArrayList(users)));
             } catch (Exception e) {
                 e.printStackTrace();
-                Platform.runLater(() -> showAlert("Error", "Load data failed: " + e.getMessage()));
+                Platform.runLater(() -> showAlert("Lỗi", "Tải dữ liệu thất bại: " + e.getMessage()));
             }
         }).start();
     }
@@ -105,24 +113,24 @@ public class UserManagementController {
             UserDialogController dialogController = loader.getController();
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Add New User");
+            dialog.setTitle("Thêm Người Dùng Mới");
             Optional<ButtonType> clickedButton = dialog.showAndWait();
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
                 UserDTO newUser = dialogController.getNewUser();
                 UserApi.createUser(newUser);
                 loadData();
-                showAlert("Success", "User created successfully!");
+                showAlert("Thành công", "Tạo người dùng thành công!");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("Error", "Cannot open dialog: " + e.getMessage());
+            showAlert("Lỗi", "Không thể mở hộp thoại: " + e.getMessage());
         }
     }
 
     private void addActionsColumn() {
         // Lưu ý: TableCell<UserDTO, UserDTO> (Cả 2 đều là UserDTO)
         colAction.setCellFactory(param -> new TableCell<UserDTO, UserDTO>() {
-            private final Button btnEdit = new Button("Edit");
+            private final Button btnEdit = new Button("Sửa");
             private final Button btnLock = new Button();
             private final HBox pane = new HBox(10, btnEdit, btnLock);
 
@@ -164,7 +172,7 @@ public class UserManagementController {
                             
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            showAlert("Error", "Cannot change status: " + ex.getMessage());
+                            showAlert("Lỗi", "Không thể thay đổi trạng thái: " + ex.getMessage());
                         }
                     }
                 });
@@ -190,11 +198,11 @@ public class UserManagementController {
 
                 // Logic: Nếu đang Active -> Phải hiện nút LOCK (Màu đỏ) để người dùng bấm vào khóa
                 if ("Active".equalsIgnoreCase(status)) {
-                    btnLock.setText("Lock");
+                    btnLock.setText("Khóa");
                     btnLock.getStyleClass().add("btn-lock");
                 } else {
                     // Ngược lại (Locked) -> Phải hiện nút UNLOCK (Màu xanh) để mở khóa
-                    btnLock.setText("Unlock");
+                    btnLock.setText("Mở khóa");
                     btnLock.getStyleClass().add("btn-unlock");
                 }
 
@@ -211,7 +219,7 @@ public class UserManagementController {
             dialogController.setEditData(selectedUser);
             Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Edit User");
+            dialog.setTitle("Chỉnh Sửa Người Dùng");
             Optional<ButtonType> clickedButton = dialog.showAndWait();
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
                 UserDTO formUser = dialogController.getNewUser();
@@ -222,7 +230,7 @@ public class UserManagementController {
                 );
                 UserApi.updateUser(userToUpdate);
                 loadData();
-                showAlert("Success", "User updated successfully!");
+                showAlert("Thành công", "Cập nhật người dùng thành công!");
             }
         } catch (Exception ex) {
             ex.printStackTrace();

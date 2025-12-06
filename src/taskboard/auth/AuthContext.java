@@ -36,4 +36,12 @@ public class AuthContext {
 
     public List<String> getRoles() { return roles; }
     public void setRoles(List<String> roles) { this.roles = roles; }
+
+    // Phương thức đăng xuất: xóa toàn bộ thông tin người dùng
+    public void logout() {
+        this.token = null;
+        this.userId = null;
+        this.fullName = null;
+        this.roles = null;
+    }
 }

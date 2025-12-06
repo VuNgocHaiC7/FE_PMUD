@@ -1,0 +1,123 @@
+/* =================================================================
+   MODERN KANBAN THEME - MATCHING PROJECT TABLE DESIGN
+   ================================================================= */
+
+/* 1. Nền tổng thể */
+.root {
+  -fx-background-color: #f8f9fa; /* Xám rất nhạt làm nền */
+  -fx-font-family: "Segoe UI", "Roboto", sans-serif;
+}
+
+/* 2. Tiêu đề trang (Header) */
+.page-header {
+  -fx-font-size: 24px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #1e293b; /* Slate-800 */
+  -fx-padding: 0 0 20 0;
+}
+
+/* 3. Cột Kanban (Column) */
+.kanban-column {
+  -fx-background-color: #f1f5f9; /* Slate-100: Màu nền cột xám nhạt */
+  -fx-background-radius: 16px; /* Bo góc lớn mềm mại */
+  -fx-border-radius: 16px;
+  -fx-padding: 15px;
+  /* Không viền để tạo cảm giác thoáng */
+}
+
+/* Header của từng cột (Vd: TO DO) */
+.column-header-label {
+  -fx-font-size: 14px;
+  -fx-font-weight: 800;
+  -fx-text-fill: #64748b; /* Slate-500: Màu chữ xám trung tính */
+  -fx-padding: 0 0 10 5;
+  -fx-effect: dropshadow(
+    three-pass-box,
+    rgba(255, 255, 255, 0.8),
+    0,
+    0,
+    0,
+    1
+  ); /* Hiệu ứng khắc nhẹ */
+}
+
+/* 4. Thẻ Task (Card) - Thiết kế giống Row trong bảng */
+.kanban-card {
+  -fx-background-color: #ffffff;
+  -fx-background-radius: 12px;
+  -fx-border-radius: 12px;
+  -fx-border-color: transparent; /* Xóa viền đen/xám cũ */
+  /* Đổ bóng nhẹ nhàng, không gắt */
+  -fx-effect: dropshadow(
+    three-pass-box,
+    rgba(148, 163, 184, 0.15),
+    10,
+    0,
+    0,
+    4
+  );
+  -fx-padding: 15px;
+  -fx-cursor: hand;
+  -fx-min-height: 90px;
+}
+
+/* Hiệu ứng khi di chuột vào thẻ */
+.kanban-card:hover {
+  -fx-effect: dropshadow(
+    three-pass-box,
+    rgba(102, 126, 234, 0.25),
+    15,
+    0,
+    0,
+    4
+  ); /* Bóng xanh nhẹ */
+  -fx-translate-y: -2px; /* Nhấc thẻ lên nhẹ */
+}
+
+/* Nội dung trong thẻ */
+.card-title {
+  -fx-font-size: 14px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #334155; /* Slate-700 */
+  -fx-wrap-text: true;
+}
+
+.card-assignee {
+  -fx-font-size: 12px;
+  -fx-font-weight: 500;
+  -fx-text-fill: #94a3b8; /* Slate-400 */
+}
+
+/* 5. Status Badges (Viên thuốc trạng thái) - Giống hệt bảng mẫu */
+.status-badge {
+  -fx-background-radius: 20px;
+  -fx-padding: 4px 12px;
+  -fx-font-size: 10px;
+  -fx-font-weight: 700;
+  -fx-alignment: CENTER;
+}
+
+/* Màu sắc badge (Khớp với image_6cf0b6.png) */
+.badge-planning {
+  /* Vàng cam nhạt */
+  -fx-background-color: #fff7ed;
+  -fx-text-fill: #c2410c;
+}
+
+.badge-inprogress {
+  /* Xanh dương nhạt */
+  -fx-background-color: #e0f2fe;
+  -fx-text-fill: #0284c7;
+}
+
+.badge-done {
+  /* Xanh lá nhạt (Bổ sung cho Done) */
+  -fx-background-color: #dcfce7;
+  -fx-text-fill: #15803d;
+}
+
+.badge-blocked {
+  /* Đỏ nhạt (Bổ sung cho Blocked) */
+  -fx-background-color: #fee2e2;
+  -fx-text-fill: #b91c1c;
+}

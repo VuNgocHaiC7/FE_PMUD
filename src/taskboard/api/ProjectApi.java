@@ -83,6 +83,16 @@ public class ProjectApi {
         return removed;
     }
 
+    // 6. Xóa Project
+    public boolean deleteProject(Long projectId) {
+        // Mock: Xóa khỏi list
+        boolean removed = mockProjects.removeIf(project -> project.getId().equals(projectId));
+        if (removed) {
+            System.out.println("API: Deleted project " + projectId);
+        }
+        return removed;
+    }
+
     // Helper: Lấy danh sách tất cả user trong hệ thống (để chọn add)
     public List<UserDTO> getAllSystemUsers() {
         List<UserDTO> users = new ArrayList<>();

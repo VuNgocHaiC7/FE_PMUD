@@ -13,15 +13,16 @@ public class TaskApi {
     private static Long nextId = 1L;
 
     static {
-        // Dữ liệu mẫu cho project ID = 1
-        mockTasks.add(new TaskDTO(nextId++, "Thiết kế giao diện", "Thiết kế UI/UX cho trang chủ", "TODO", "Nguyễn Văn A", 1L));
-        mockTasks.add(new TaskDTO(nextId++, "Xây dựng API", "Tạo REST API cho module user", "DOING", "Trần Thị B", 1L));
-        mockTasks.add(new TaskDTO(nextId++, "Viết unit test", "Test coverage cho service layer", "DONE", "Lê Văn C", 1L));
-        mockTasks.add(new TaskDTO(nextId++, "Tích hợp thanh toán", "Kết nối payment gateway", "TODO", "", 1L));
+        // Dữ liệu mẫu cho project ID = 1 (sử dụng status: ToDo, InProgress, Done, Blocked)
+        mockTasks.add(new TaskDTO(nextId++, "Thiết kế giao diện", "Thiết kế UI/UX cho trang chủ", "ToDo", "Nguyễn Văn A", 1L));
+        mockTasks.add(new TaskDTO(nextId++, "Xây dựng API", "Tạo REST API cho module user", "InProgress", "Trần Thị B", 1L));
+        mockTasks.add(new TaskDTO(nextId++, "Viết unit test", "Test coverage cho service layer", "Done", "Lê Văn C", 1L));
+        mockTasks.add(new TaskDTO(nextId++, "Tích hợp thanh toán", "Kết nối payment gateway", "ToDo", "", 1L));
+        mockTasks.add(new TaskDTO(nextId++, "Fix bug authentication", "Sửa lỗi đăng nhập không hoạt động", "Blocked", "Nguyễn Văn A", 1L));
         
         // Dữ liệu mẫu cho project ID = 2
-        mockTasks.add(new TaskDTO(nextId++, "Phân tích yêu cầu", "Gặp khách hàng để thu thập yêu cầu", "DONE", "Phạm Thị D", 2L));
-        mockTasks.add(new TaskDTO(nextId++, "Setup môi trường", "Cài đặt server và database", "DOING", "Hoàng Quản Lý", 2L));
+        mockTasks.add(new TaskDTO(nextId++, "Phân tích yêu cầu", "Gặp khách hàng để thu thập yêu cầu", "Done", "Phạm Thị D", 2L));
+        mockTasks.add(new TaskDTO(nextId++, "Setup môi trường", "Cài đặt server và database", "InProgress", "Hoàng Quản Lý", 2L));
     }
 
     // 1. Lấy danh sách Task theo Project

@@ -39,6 +39,7 @@ public class TaskDTO {
     public String getDescription() { return description.get(); }
     public String getStatus() { return status.get(); }
     public String getAssignee() { return assignee.get(); }
+    public String getAssigneeName() { return assignee.get(); } // Alias for compatibility
     public Long getProjectId() { return projectId.get(); }
 
     // --- SETTERS ---

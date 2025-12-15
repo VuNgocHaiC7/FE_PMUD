@@ -83,7 +83,7 @@
             <!-- Personal Section -->
             <Label text="PERSONAL" styleClass="menu-section-label" />
             
-            <Button fx:id="btnTaskDetail" text="Chi tiết task &amp; bình luận" onAction="#showTaskDetail" 
+            <Button fx:id="btnTaskDetail" text="Quản lý task" onAction="#showTaskManagement" 
                     maxWidth="Infinity" styleClass="menu-btn" />
             
             <Button fx:id="btnNotifications" text="Thông báo" onAction="#showNotifications" 

@@ -17,15 +17,15 @@
    ======================================== */
 .sidebar-header {
   -fx-background-color: transparent;
-  -fx-padding: 20 25 15 25;
+  -fx-padding: 25 25 20 25;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 2);
 }
 
 .app-title {
   -fx-text-fill: #ffffff;
-  -fx-font-size: 22px;
+  -fx-font-size: 24px;
   -fx-font-weight: bold;
-  -fx-padding: 0 0 3 0;
+  -fx-padding: 0;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1);
 }
 
@@ -65,13 +65,13 @@
   -fx-font-size: 14px;
   -fx-font-weight: 600;
   -fx-alignment: CENTER_LEFT;
-  -fx-padding: 10 25 10 25;
+  -fx-padding: 12 25 12 25;
   -fx-cursor: hand;
   -fx-background-radius: 10;
   -fx-border-width: 0 0 0 4;
   -fx-border-color: transparent;
   -fx-border-radius: 10 0 0 10;
-  -fx-background-insets: 5 10 5 10;
+  -fx-background-insets: 0 10 0 10;
   -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 3, 0, 0, 1);
 }
 
@@ -117,11 +117,11 @@
   -fx-font-size: 14px;
   -fx-font-weight: 600;
   -fx-alignment: CENTER_LEFT;
-  -fx-padding: 10 25 10 25;
+  -fx-padding: 12 25 12 25;
   -fx-cursor: hand;
   -fx-background-radius: 10;
   -fx-border-width: 0;
-  -fx-background-insets: 5 10 5 10;
+  -fx-background-insets: 0 10 0 10;
 }
 
 .logout-btn:hover {

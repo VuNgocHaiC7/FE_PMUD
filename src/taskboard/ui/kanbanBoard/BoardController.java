@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.scene.layout.VBox;
@@ -11,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import taskboard.api.TaskApi;
+import taskboard.auth.AuthContext;
 import taskboard.model.TaskDTO;
 import taskboard.ui.project.TaskDialogController;
 
@@ -22,14 +25,20 @@ public class BoardController {
     @FXML private VBox todoColumn;
     @FXML private VBox inProgressColumn;
     @FXML private VBox doneColumn;
-    @FXML private VBox blockedColumn;
+    @FXML private Button btnAddTask;
 
-    private final TaskApi taskApi = new TaskApi();
     private Long currentProjectId; // ID dự án hiện tại
 
     // Gọi hàm này khi chuyển màn hình để set Project ID và load dữ liệu
     public void setProjectId(Long projectId) {
         this.currentProjectId = projectId;
+        
+        // Kiểm tra quyền: Chỉ Admin mới thấy nút Add Task
+        boolean isAdmin = AuthContext.getInstance().getRoles() != null 
+                && AuthContext.getInstance().getRoles().contains("ADMIN");
+        btnAddTask.setVisible(isAdmin);
+        btnAddTask.setManaged(isAdmin);
+        
         loadBoardData();
     }
 
@@ -39,27 +48,36 @@ public class BoardController {
         todoColumn.getChildren().clear();
         inProgressColumn.getChildren().clear();
         doneColumn.getChildren().clear();
-        blockedColumn.getChildren().clear();
 
         // Setup Drag & Drop cho các cột (Target)
-        setupColumnDragTarget(todoColumn, "ToDo");
-        setupColumnDragTarget(inProgressColumn, "InProgress");
-        setupColumnDragTarget(doneColumn, "Done");
-        setupColumnDragTarget(blockedColumn, "Blocked");
+        setupColumnDragTarget(todoColumn, "TODO");
+        setupColumnDragTarget(inProgressColumn, "IN_PROGRESS");
+        setupColumnDragTarget(doneColumn, "DONE");
 
         // Gọi API lấy task
-        List<TaskDTO> tasks = taskApi.getTasksByProject(currentProjectId);
+        try {
+            List<TaskDTO> tasks = TaskApi.getTasksByProject(currentProjectId);
+            System.out.println("📥 Loaded " + tasks.size() + " tasks from API");
 
-        // Phân loại task vào cột [cite: 151]
-        for (TaskDTO task : tasks) {
-            Pane taskCard = createTaskCard(task);
-            switch (task.getStatus()) {
-                case "ToDo" -> todoColumn.getChildren().add(taskCard);
-                case "InProgress" -> inProgressColumn.getChildren().add(taskCard);
-                case "Done" -> doneColumn.getChildren().add(taskCard);
-                case "Blocked" -> blockedColumn.getChildren().add(taskCard);
-                default -> todoColumn.getChildren().add(taskCard); // Default
+            // Phân loại task vào cột
+            for (TaskDTO task : tasks) {
+                Pane taskCard = createTaskCard(task);
+                String status = task.getStatus();
+                System.out.println("  Task: " + task.getTitle() + " | Status: '" + status + "'");
+                
+                switch (status) {
+                    case "TODO" -> todoColumn.getChildren().add(taskCard);
+                    case "IN_PROGRESS" -> inProgressColumn.getChildren().add(taskCard);
+                    case "DONE" -> doneColumn.getChildren().add(taskCard);
+                    default -> {
+                        System.out.println("⚠️ Unknown status: " + status + ", adding to TODO");
+                        todoColumn.getChildren().add(taskCard);
+                    }
+                }
             }
+        } catch (Exception e) {
+            System.err.println("Lỗi load tasks: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -74,8 +92,16 @@ public class BoardController {
         lblTitle.setStyle("-fx-font-weight: bold;");
         lblTitle.setWrapText(true);
 
-        Label lblAssignee = new Label("Assignee: " + (task.getAssigneeName() != null ? task.getAssigneeName() : "Unassigned"));
+        // Hiển thị tất cả người được gán
+        String assigneeText = "Unassigned";
+        if (task.getAssigneeNames() != null && !task.getAssigneeNames().isEmpty()) {
+            assigneeText = String.join(", ", task.getAssigneeNames());
+        } else if (task.getAssigneeName() != null && !task.getAssigneeName().isEmpty()) {
+            assigneeText = task.getAssigneeName();
+        }
+        Label lblAssignee = new Label("👥 " + assigneeText);
         lblAssignee.setStyle("-fx-font-size: 10px; -fx-text-fill: #666;");
+        lblAssignee.setWrapText(true);
 
         card.getChildren().addAll(lblTitle, lblAssignee);
 
@@ -98,7 +124,7 @@ public class BoardController {
         return card;
     }
 
-    // --- XỬ LÝ THẢ (DROP) TẠI CỘT (TARGET) --- [cite: 158-161]
+    // --- XỬ LÝ THẢ (DROP) TẠI CỘT (TARGET) ===
     private void setupColumnDragTarget(VBox column, String targetStatus) {
         // Chấp nhận kéo thả nếu có dữ liệu
         column.setOnDragOver(event -> {
@@ -108,24 +134,37 @@ public class BoardController {
             event.consume();
         });
 
+        // Hiệu ứng hover khi kéo task vào cột
+        column.setOnDragEntered(event -> {
+            if (event.getGestureSource() != column && event.getDragboard().hasString()) {
+                column.setStyle(column.getStyle() + "; -fx-background-color: #e6f3ff; -fx-border-color: #3182ce; -fx-border-width: 2;");
+            }
+            event.consume();
+        });
+
+        column.setOnDragExited(event -> {
+            column.setStyle(""); // Reset style
+            event.consume();
+        });
+
         // Khi thả task vào cột
         column.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
             boolean success = false;
             if (db.hasString()) {
                 Long taskId = Long.parseLong(db.getString());
-                
-                // 1. Gọi API update 
-                boolean apiSuccess = taskApi.updateTaskStatus(taskId, targetStatus);
-                
-                if (apiSuccess) {
-                    System.out.println("Moved task " + taskId + " to " + targetStatus);
-                    // 2. Refresh lại board để UI cập nhật đúng vị trí
+                try {
+                    // Gọi API: PUT /api/tasks/{id}/status (Admin & Member đều có thể kéo thả)
+                    TaskApi.updateTaskStatus(taskId, targetStatus);
+                    System.out.println("✅ Moved task " + taskId + " to " + targetStatus);
+                    
+                    // Refresh lại board để UI cập nhật đúng vị trí
                     loadBoardData(); 
                     success = true;
-                } else {
-                    // [cite: 163] Revert UI hoặc thông báo lỗi
-                    System.err.println("Failed to update status");
+                } catch (Exception e) {
+                    // Hiển thị thông báo lỗi
+                    System.err.println("❌ Failed to update status: " + e.getMessage());
+                    showAlert("Lỗi", "Không thể cập nhật trạng thái task: " + e.getMessage(), Alert.AlertType.ERROR);
                 }
             }
             event.setDropCompleted(success);
@@ -154,5 +193,51 @@ public class BoardController {
             e.printStackTrace();
             System.err.println("Không thể mở TaskDetailView: " + e.getMessage());
         }
+    }
+
+    // === XỬ LÝ TẠO TASK MỚI (CHỈ ADMIN) ===
+    @FXML
+    private void handleAddTask() {
+        // Kiểm tra quyền Admin
+        boolean isAdmin = AuthContext.getInstance().getRoles() != null 
+                && AuthContext.getInstance().getRoles().contains("ADMIN");
+        
+        if (!isAdmin) {
+            showAlert("Không có quyền", "Chỉ Admin mới có thể tạo task mới!", Alert.AlertType.WARNING);
+            return;
+        }
+
+        try {
+            // Mở dialog tạo task mới
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/project/TaskDialogView.fxml"));
+            Parent root = loader.load();
+            
+            TaskDialogController controller = loader.getController();
+            controller.setProjectId(currentProjectId);
+            // Không set task -> mode tạo mới
+            controller.setOnTaskSaved(() -> {
+                System.out.println("Task mới đã được tạo, đang reload board...");
+                loadBoardData(); // Reload board để hiển thị task mới
+            });
+            
+            Stage stage = new Stage();
+            stage.setTitle("Tạo Task Mới");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Lỗi", "Không thể mở form tạo task: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    // Hiển thị thông báo
+    private void showAlert(String title, String content, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<ScrollPane fitToWidth="true" xmlns="http://javafx.com/javafx/17" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="taskboard.ui.dashboard.DashboardController"
+            style="-fx-background-color: #f5f7fa;">
+    
+    <VBox spacing="20" style="-fx-background-color: #f5f7fa;">
+        <padding>
+            <Insets top="30" right="30" bottom="30" left="30" />
+        </padding>
+        
+        <!-- Header -->
+        <VBox style="-fx-background-color: white; -fx-background-radius: 12px; 
+                     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);">
+            <padding>
+                <Insets top="30" right="30" bottom="25" left="30"/>
+            </padding>
+            
+            <!-- Title Row -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="📊 Dashboard / Báo cáo" 
+                       style="-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #667eea;" />
+                <Region HBox.hgrow="ALWAYS"/>
+            </HBox>
+            
+            <!-- Subtitle -->
+            <Label text="Tổng quan về dự án và công việc" 
+                   style="-fx-font-size: 14px; -fx-text-fill: #94a3b8; -fx-padding: 10 0 0 0;" />
+        </VBox>
+        
+        <!-- Statistics Cards -->
+        <HBox spacing="20">
+            <!-- Card: Tổng số dự án -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" 
+                  HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="📁 Tổng số Dự án" 
+                       style="-fx-font-size: 14px; -fx-text-fill: #64748b; -fx-font-weight: 600;" />
+                <Label fx:id="lblTotalProjects" text="0" 
+                       style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #6366f1;" />
+                <Label text="Dự án đang quản lý" 
+                       style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+            </VBox>
+            
+            <!-- Card: Tổng số Task -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" 
+                  HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="✅ Tổng số Task" 
+                       style="-fx-font-size: 14px; -fx-text-fill: #64748b; -fx-font-weight: 600;" />
+                <Label fx:id="lblTotalTasks" text="0" 
+                       style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #10b981;" />
+                <Label text="Công việc trong hệ thống" 
+                       style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+            </VBox>
+            
+            <!-- Card: Task hoàn thành -->
+            <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" 
+                  HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="🎉 Task Hoàn thành" 
+                       style="-fx-font-size: 14px; -fx-text-fill: #64748b; -fx-font-weight: 600;" />
+                <Label fx:id="lblCompletedTasks" text="0" 
+                       style="-fx-font-size: 36px; -fx-font-weight: bold; -fx-text-fill: #f59e0b;" />
+                <Label text="Đã hoàn thành" 
+                       style="-fx-font-size: 12px; -fx-text-fill: #94a3b8;" />
+            </VBox>
+        </HBox>
+        
+        <!-- Charts Section -->
+        <GridPane hgap="20" vgap="20">
+            <!-- Row 1: PieChart - Tasks by Status -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
+                  GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="📊 Task theo Trạng thái" 
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                <PieChart fx:id="chartTasksByStatus" prefHeight="300" prefWidth="400" 
+                         legendVisible="true" labelsVisible="true" />
+            </VBox>
+            
+            <!-- Row 1: BarChart - Tasks by Project -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
+                  GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="📈 Task theo Dự án" 
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                <BarChart fx:id="chartTasksByProject" prefHeight="300" prefWidth="400" 
+                         legendVisible="false">
+                    <xAxis>
+                        <CategoryAxis fx:id="projectAxis" label="Dự án" />
+                    </xAxis>
+                    <yAxis>
+                        <NumberAxis fx:id="taskCountAxis" label="Số lượng Task" />
+                    </yAxis>
+                </BarChart>
+            </VBox>
+            
+            <!-- Row 2: PieChart - Projects by Status -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
+                  GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="🎯 Dự án theo Trạng thái" 
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                <PieChart fx:id="chartProjectsByStatus" prefHeight="300" prefWidth="400" 
+                         legendVisible="true" labelsVisible="true" />
+            </VBox>
+            
+            <!-- Row 2: PieChart - Tasks by Priority -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-background-radius: 12px; 
+                                     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);"
+                  GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <padding>
+                    <Insets top="20" right="20" bottom="20" left="20" />
+                </padding>
+                <Label text="⚡ Task theo Độ ưu tiên" 
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #1e293b;" />
+                <PieChart fx:id="chartTasksByPriority" prefHeight="300" prefWidth="400" 
+                         legendVisible="true" labelsVisible="true" />
+            </VBox>
+        </GridPane>
+        
+    </VBox>
+    
+</ScrollPane>

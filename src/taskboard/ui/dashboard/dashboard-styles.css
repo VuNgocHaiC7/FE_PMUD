@@ -1,0 +1,83 @@
+/* Dashboard Styles */
+.scroll-pane {
+  -fx-background-color: transparent;
+}
+
+.scroll-pane > .viewport {
+  -fx-background-color: #f5f7fa;
+}
+
+/* Statistics Cards */
+.stat-card {
+  -fx-background-color: white;
+  -fx-background-radius: 12px;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0, 0, 2);
+}
+
+/* Charts */
+.chart {
+  -fx-background-color: transparent;
+}
+
+.chart-title {
+  -fx-font-size: 18px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #1e293b;
+}
+
+.chart-legend {
+  -fx-background-color: transparent;
+  -fx-padding: 10px;
+}
+
+/* PieChart colors */
+.default-color0.chart-pie {
+  -fx-pie-color: #6366f1;
+}
+.default-color1.chart-pie {
+  -fx-pie-color: #10b981;
+}
+.default-color2.chart-pie {
+  -fx-pie-color: #f59e0b;
+}
+.default-color3.chart-pie {
+  -fx-pie-color: #ef4444;
+}
+.default-color4.chart-pie {
+  -fx-pie-color: #8b5cf6;
+}
+.default-color5.chart-pie {
+  -fx-pie-color: #06b6d4;
+}
+.default-color6.chart-pie {
+  -fx-pie-color: #ec4899;
+}
+.default-color7.chart-pie {
+  -fx-pie-color: #84cc16;
+}
+
+/* BarChart colors */
+.default-color0.chart-bar {
+  -fx-bar-fill: #6366f1;
+}
+.default-color1.chart-bar {
+  -fx-bar-fill: #10b981;
+}
+.default-color2.chart-bar {
+  -fx-bar-fill: #f59e0b;
+}
+.default-color3.chart-bar {
+  -fx-bar-fill: #ef4444;
+}
+
+/* Chart axis */
+.axis {
+  -fx-tick-label-fill: #64748b;
+  -fx-font-size: 12px;
+}
+
+.axis-label {
+  -fx-text-fill: #1e293b;
+  -fx-font-weight: bold;
+  -fx-font-size: 13px;
+}

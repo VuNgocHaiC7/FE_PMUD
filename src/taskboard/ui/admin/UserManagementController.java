@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import taskboard.api.UserApi;
+import taskboard.auth.AuthContext;
 import taskboard.model.UserDTO;
 
 import java.util.List;
@@ -16,6 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 public class UserManagementController {
 
     @FXML private TextField txtSearch;
+    @FXML private Button btnCreateUser;
     @FXML private TableView<UserDTO> tableUsers;
     
     @FXML private TableColumn<UserDTO, Number> colId;
@@ -25,14 +27,46 @@ public class UserManagementController {
     @FXML private TableColumn<UserDTO, String> colRole;
     @FXML private TableColumn<UserDTO, String> colStatus;
     @FXML private TableColumn<UserDTO, UserDTO> colAction;
+    
+    // New header fields
+    @FXML private ComboBox<String> cbRoleFilter;
+    
+    private boolean isAdmin = false;
 
     @FXML
     public void initialize() {
+        // Kiểm tra role của user hiện tại
+        checkUserRole();
+        
+        setupFilterCombo();
         setupColumns();
         loadData(); 
         
         // Tắt focus mặc định vào nút Create User khi mở màn hình
         Platform.runLater(() -> txtSearch.requestFocus());
+    }
+    
+    private void setupFilterCombo() {
+        if (cbRoleFilter != null) {
+            cbRoleFilter.setItems(FXCollections.observableArrayList(
+                "Tất cả",
+                "ADMIN",
+                "MEMBER"
+            ));
+            cbRoleFilter.setValue("Tất cả");
+            cbRoleFilter.setOnAction(e -> handleSearch());
+        }
+    }
+    
+    private void checkUserRole() {
+        List<String> roles = AuthContext.getInstance().getRoles();
+        isAdmin = roles != null && roles.contains("ADMIN");
+        
+        // Ẩn nút Create User nếu không phải admin
+        if (btnCreateUser != null) {
+            btnCreateUser.setVisible(isAdmin);
+            btnCreateUser.setManaged(isAdmin);
+        }
     }
 
         private void setupColumns() {
@@ -95,11 +129,17 @@ public class UserManagementController {
     private void loadData() {
         new Thread(() -> {
             try {
+                // GỌI API: GET /api/users
                 List<UserDTO> users = UserApi.getAllUsers(txtSearch.getText());
-                Platform.runLater(() -> tableUsers.setItems(FXCollections.observableArrayList(users)));
+                // Hiển thị lên bảng (TableView)
+                Platform.runLater(() -> {
+                    tableUsers.setItems(FXCollections.observableArrayList(users));
+                });
             } catch (Exception e) {
                 e.printStackTrace();
-                Platform.runLater(() -> showAlert("Lỗi", "Tải dữ liệu thất bại: " + e.getMessage()));
+                Platform.runLater(() -> {
+                    showAlert("Lỗi", "Tải dữ liệu thất bại: " + e.getMessage());
+                });
             }
         }).start();
     }
@@ -117,7 +157,11 @@ public class UserManagementController {
             Optional<ButtonType> clickedButton = dialog.showAndWait();
             if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
                 UserDTO newUser = dialogController.getNewUser();
+                
+                // GỌI API: POST /api/users
                 UserApi.createUser(newUser);
+                
+                // XỬ LÝ: Tắt popup, reload danh sách để thấy user mới
                 loadData();
                 showAlert("Thành công", "Tạo người dùng thành công!");
             }
@@ -128,22 +172,41 @@ public class UserManagementController {
     }
 
     private void addActionsColumn() {
-        // Lưu ý: TableCell<UserDTO, UserDTO> (Cả 2 đều là UserDTO)
+        // TableCell<UserDTO, UserDTO> (Cả 2 đều là UserDTO)
         colAction.setCellFactory(param -> new TableCell<UserDTO, UserDTO>() {
-            private final Button btnEdit = new Button("Sửa");
+            private final Button btnChangeRole = new Button("Gán Role");
             private final Button btnLock = new Button();
-            private final HBox pane = new HBox(10, btnEdit, btnLock);
+            private final Button btnDelete = new Button("Xóa");
+            private final HBox pane = new HBox(8, btnChangeRole, btnLock, btnDelete);
 
             {
                 pane.setStyle("-fx-alignment: CENTER;");
-                btnEdit.getStyleClass().addAll("table-btn", "btn-edit");
+                
+                // Set minimum width để text hiển thị đầy đủ
+                btnChangeRole.setMinWidth(90);
+                btnChangeRole.setPrefWidth(90);
+                btnLock.setMinWidth(80);
+                btnLock.setPrefWidth(80);
+                btnDelete.setMinWidth(70);
+                btnDelete.setPrefWidth(70);
+                
+                // Style classes
+                btnChangeRole.getStyleClass().addAll("table-btn", "btn-info");
+                btnDelete.getStyleClass().addAll("table-btn", "btn-delete");
 
-                // --- LOGIC NÚT EDIT ---
-                btnEdit.setOnAction(e -> {
-                    // Lấy user trực tiếp từ item của ô (An toàn 100%)
+                // --- LOGIC NÚT CHANGE ROLE ---
+                btnChangeRole.setOnAction(e -> {
                     UserDTO user = getItem(); 
                     if (user != null) {
-                        handleEditUser(user);
+                        handleChangeRole(user);
+                    }
+                });
+                
+                // --- LOGIC NÚT DELETE ---
+                btnDelete.setOnAction(e -> {
+                    UserDTO user = getItem();
+                    if (user != null) {
+                        handleDeleteUser(user);
                     }
                 });
 
@@ -155,25 +218,34 @@ public class UserManagementController {
                         boolean isActive = "Active".equalsIgnoreCase(currentStatus);
                         String newStatus = isActive ? "Locked" : "Active";
                         
-                        try {
-                            // 1. Gọi API cập nhật
-                            UserApi.changeStatus(user.getId(), newStatus);
-                            
-                            // 2. Cập nhật ngay lập tức vào đối tượng hiện tại trên bảng (để không phải load lại API)
-                            user.setStatus(newStatus); 
-                            
-                            // 3. [QUAN TRỌNG] Bắt buộc bảng vẽ lại dòng này
-                            // Nếu không có dòng này, cột Status tự đổi (do nó bind property), 
-                            // nhưng cột Action sẽ đứng im.
-                            tableUsers.refresh(); 
-                            
-                            // Nếu muốn chắc ăn hơn thì gọi loadData() nhưng sẽ chậm hơn
-                            // loadData(); 
-                            
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                            showAlert("Lỗi", "Không thể thay đổi trạng thái: " + ex.getMessage());
-                        }
+                        // Chạy API call trong background thread để không block UI
+                        new Thread(() -> {
+                            try {
+                                // 1. GỌI API: PUT /api/users/{id}/status
+                                UserApi.changeStatus(user.getId(), newStatus);
+                                
+                                // 2. Cập nhật UI trên JavaFX Application Thread
+                                Platform.runLater(() -> {
+                                    // Cập nhật ngay lập tức vào đối tượng hiện tại trên bảng
+                                    user.setStatus(newStatus); 
+                                    
+                                    // Bắt buộc bảng vẽ lại dòng này
+                                    tableUsers.refresh(); 
+                                    
+                                    // Hiển thị thông báo thành công
+                                    String message = isActive ? 
+                                        "Đã khóa tài khoản " + user.getFullName() : 
+                                        "Đã mở khóa tài khoản " + user.getFullName();
+                                    showAlert("Thành công", message);
+                                });
+                                
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                Platform.runLater(() -> {
+                                    showAlert("Lỗi", "Không thể thay đổi trạng thái: " + ex.getMessage());
+                                });
+                            }
+                        }).start();
                     }
                 });
             }
@@ -186,6 +258,25 @@ public class UserManagementController {
                     setGraphic(null);
                     return;
                 }
+                
+                // Kiểm tra xem có phải tài khoản Admin hệ thống không (không phân biệt hoa thường)
+                boolean isAdminAccount = "admin".equalsIgnoreCase(user.getUsername());
+                
+                // Kiểm tra user hiện tại có phải là "admin" không
+                String currentUsername = AuthContext.getInstance().getUsername();
+                boolean isCurrentUserAdmin = "admin".equalsIgnoreCase(currentUsername);
+                
+                // Chỉ user có username là "admin" mới thấy nút xóa
+                // Và không được xóa chính tài khoản admin
+                boolean canEdit = isAdmin && !isAdminAccount;
+                boolean canDelete = isCurrentUserAdmin && !isAdminAccount;
+                
+                btnChangeRole.setVisible(canEdit);
+                btnChangeRole.setManaged(canEdit);
+                btnLock.setVisible(canEdit);
+                btnLock.setManaged(canEdit);
+                btnDelete.setVisible(canDelete);
+                btnDelete.setManaged(canDelete);
 
                 String status = (user.getStatus() == null) ? "" : user.getStatus().trim();
                 
@@ -211,34 +302,72 @@ public class UserManagementController {
         });
     }
 
-    private void handleEditUser(UserDTO selectedUser) {
-         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/admin/UserDialogView.fxml"));
-            DialogPane dialogPane = loader.load();
-            UserDialogController dialogController = loader.getController();
-            dialogController.setEditData(selectedUser);
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Chỉnh Sửa Người Dùng");
-            Optional<ButtonType> clickedButton = dialog.showAndWait();
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                UserDTO formUser = dialogController.getNewUser();
-                UserDTO userToUpdate = new UserDTO(
-                    selectedUser.getId(), selectedUser.getUsername(),
-                    formUser.getFullName(), formUser.getEmail(),
-                    formUser.getRole(), selectedUser.getStatus()
-                );
-                UserApi.updateUser(userToUpdate);
-                loadData();
-                showAlert("Thành công", "Cập nhật người dùng thành công!");
+    @FXML private void handleSearch() { loadData(); }
+
+    // --- CHỨC NĂNG GÁN ROLE ---
+    private void handleChangeRole(UserDTO selectedUser) {
+        // Tạo danh sách các role có thể chọn (chỉ ADMIN và MEMBER)
+        List<String> roles = List.of("ADMIN", "MEMBER");
+        
+        // Tạo ChoiceDialog để chọn role
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(selectedUser.getRole(), roles);
+        dialog.setTitle("Gán Role");
+        dialog.setHeaderText("Thay đổi quyền hạn cho: " + selectedUser.getFullName());
+        dialog.setContentText("Chọn Role mới:");
+        
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(newRole -> {
+            try {
+                // GỌI API: PUT /api/users/{id}/role
+                // Body: { "role": "PM" }
+                UserApi.updateUserRole(selectedUser.getId(), newRole);
+                
+                // Cập nhật ngay trên bảng (không cần reload)
+                selectedUser.setRole(newRole);
+                tableUsers.refresh();
+                
+                showAlert("Thành công", "Đã cập nhật role của " + selectedUser.getFullName() + " thành " + newRole);
+                
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                showAlert("Lỗi", "Không thể cập nhật role: " + ex.getMessage());
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new RuntimeException(ex);
+        });
+    }
+    
+    // --- CHỨC NĂNG XÓA USER ---
+    private void handleDeleteUser(UserDTO selectedUser) {
+        // Hiển thị hộp thoại xác nhận
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận xóa");
+        confirmAlert.setHeaderText("Bạn có chắc muốn xóa người dùng này?");
+        confirmAlert.setContentText("Người dùng: " + selectedUser.getFullName() + " (" + selectedUser.getUsername() + ")\n\n" +
+                                   "Hành động này KHÔNG thể hoàn tác!");
+        
+        Optional<ButtonType> result = confirmAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            // Chạy trong background thread
+            new Thread(() -> {
+                try {
+                    // GỌI API: DELETE /api/users/{id}
+                    UserApi.deleteUser(selectedUser.getId());
+                    
+                    // Cập nhật UI
+                    Platform.runLater(() -> {
+                        // Reload lại danh sách
+                        loadData();
+                        showAlert("Thành công", "Đã xóa người dùng " + selectedUser.getFullName() + " thành công!");
+                    });
+                    
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Platform.runLater(() -> {
+                        showAlert("Lỗi", "Không thể xóa người dùng: " + ex.getMessage());
+                    });
+                }
+            }).start();
         }
     }
-
-    @FXML private void handleSearch() { loadData(); }
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -46,6 +46,16 @@
          
          <!-- Right Section: Create and User -->
          <HBox alignment="CENTER_RIGHT" spacing="15">
+            <!-- Notification Bell Icon with Badge -->
+            <HBox alignment="CENTER" spacing="5" styleClass="notification-container" 
+                  onMouseClicked="#handleShowNotifications" style="-fx-cursor: hand;">
+               <Label text="🔔" style="-fx-font-size: 24px;"/>
+               <Label fx:id="lblNotificationBadge" text="0" mouseTransparent="true"
+                      style="-fx-background-color: #f56565; -fx-text-fill: white; -fx-font-size: 11px; 
+                             -fx-font-weight: bold; -fx-padding: 2 6; -fx-background-radius: 10; 
+                             -fx-min-width: 20; -fx-alignment: center;" visible="false"/>
+            </HBox>
+            
             <Button fx:id="btnCreate" text="+ Tạo mới" onAction="#handleCreate" styleClass="create-btn" />
             <Label fx:id="userLabel" text="Người dùng" styleClass="user-label" />
          </HBox>
@@ -58,52 +68,35 @@
             <!-- Header Section with gradient -->
             <VBox styleClass="sidebar-header">
                <Label text="TaskBoard" styleClass="app-title" />
-               <Label text="Project Management" styleClass="app-subtitle" />
             </VBox>
             
             <Separator styleClass="menu-separator" />
             
             <!-- Main Menu Section -->
-            <Label text="MAIN" styleClass="menu-section-label" />
+            <VBox spacing="8" style="-fx-padding: 15 0 15 0;">
+               <Button fx:id="btnDashboard" text="Dashboard / Báo cáo" onAction="#showDashboard" 
+                       maxWidth="Infinity" styleClass="menu-btn" />
+               
+               <Button fx:id="btnUserManagement" text="Quản lý người dùng" onAction="#showUserManagement" 
+                       maxWidth="Infinity" styleClass="menu-btn" />
+               
+               <Button fx:id="btnProjectManagement" text="Quản lý dự án &amp; thành viên" onAction="#showProjectManagement" 
+                       maxWidth="Infinity" styleClass="menu-btn" />
+               
+               <Button fx:id="btnKanban" text="Bảng công việc" onAction="#showKanban" 
+                       maxWidth="Infinity" styleClass="menu-btn" />
+            </VBox>
             
-            <Button fx:id="btnDashboard" text="Dashboard / Báo cáo" onAction="#showDashboard" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
-            
-            <Button fx:id="btnUserManagement" text="Quản lý người dùng" onAction="#showUserManagement" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
-            
-            <Button fx:id="btnProjectManagement" text="Quản lý dự án &amp; thành viên" onAction="#showProjectManagement" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
-            
-            <Button fx:id="btnKanban" text="Bảng công việc (Kanban)" onAction="#showKanban" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
+            <!-- Flexible spacing to push logout to bottom -->
+            <Region VBox.vgrow="ALWAYS" />
             
             <Separator styleClass="menu-separator" />
-            
-            <!-- Personal Section -->
-            <Label text="PERSONAL" styleClass="menu-section-label" />
-            
-            <Button fx:id="btnTaskDetail" text="Quản lý task" onAction="#showTaskManagement" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
-            
-            <Button fx:id="btnNotifications" text="Thông báo" onAction="#showNotifications" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
-            
-            <Button fx:id="btnMyTasks" text="My Tasks (Công việc của tôi)" onAction="#showMyTasks" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
             
             <!-- System Section -->
-            <Separator styleClass="menu-separator" />
-            
-            <Label text="SYSTEM" styleClass="menu-section-label" />
-            
-            <Button fx:id="btnConfig" text="Cấu hình hệ thống" onAction="#showConfig" 
-                    maxWidth="Infinity" styleClass="menu-btn" />
-
-            <Button fx:id="btnLogout" text="↪ Đăng xuất" onAction="#handleLogout" 
-                    maxWidth="Infinity" styleClass="logout-btn" />
-            
-            <Region VBox.vgrow="ALWAYS" />
+            <VBox spacing="8" style="-fx-padding: 15 0 20 0;">
+               <Button fx:id="btnLogout" text="↪ Đăng xuất" onAction="#handleLogout" 
+                       maxWidth="Infinity" styleClass="logout-btn" />
+            </VBox>
             
          </children>
       </VBox>

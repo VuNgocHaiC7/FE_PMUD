@@ -1,12 +1,12 @@
 package taskboard.ui.project;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
@@ -17,11 +17,8 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public class ProjectListController {
-    @FXML private TextField txtKeyword;
-    @FXML private ComboBox<String> cbStatus;
     @FXML private TableView<ProjectDTO> tblProjects;
     @FXML private TableColumn<ProjectDTO, String> colName;
     @FXML private TableColumn<ProjectDTO, String> colPM;
@@ -29,30 +26,32 @@ public class ProjectListController {
     @FXML private TableColumn<ProjectDTO, String> colStart;
     @FXML private TableColumn<ProjectDTO, String> colEnd;
     @FXML private TableColumn<ProjectDTO, ProjectDTO> colAction;
-
-    private ProjectApi projectApi = new ProjectApi();
+    
+    // New header fields
+    @FXML private ComboBox<String> cbStatusFilter;
+    @FXML private TextField txtSearchProject;
 
     public void initialize() {
         try {
+            setupFilterCombo();
             setupColumns();
-            
-            cbStatus.setItems(FXCollections.observableArrayList("Tất cả", "PLANNING", "IN_PROGRESS", "CLOSED"));
-            cbStatus.getSelectionModel().selectFirst();
-
-            // Setup Double-Click to open board
-            tblProjects.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && tblProjects.getSelectionModel().getSelectedItem() != null) {
-                    openProjectBoard(tblProjects.getSelectionModel().getSelectedItem());
-                }
-            });
-
             loadData();
-            
-            // Focus on search field instead of create button
-            Platform.runLater(() -> txtKeyword.requestFocus());
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Lỗi trong initialize: " + e.getMessage());
+        }
+    }
+    
+    private void setupFilterCombo() {
+        if (cbStatusFilter != null) {
+            cbStatusFilter.setItems(FXCollections.observableArrayList(
+                "Tất cả",
+                "ĐANG HOẠT ĐỘNG",
+                "HOÀN THÀNH",
+                "ĐÃ ĐÓNG"
+            ));
+            cbStatusFilter.setValue("Tất cả");
+            cbStatusFilter.setOnAction(e -> handleSearch());
         }
     }
 
@@ -81,11 +80,11 @@ public class ProjectListController {
                     // Hiển thị tiếng Việt cho status
                     String displayText = item;
                     switch (item) {
-                        case "PLANNING":
-                            displayText = "LẬP KẾ HOẠCH";
+                        case "ACTIVE":
+                            displayText = "ĐANG HOẠT ĐỘNG";
                             break;
-                        case "IN_PROGRESS":
-                            displayText = "ĐANG THỰC HIỆN";
+                        case "COMPLETED":
+                            displayText = "HOÀN THÀNH";
                             break;
                         case "CLOSED":
                             displayText = "ĐÃ ĐÓNG";
@@ -97,11 +96,11 @@ public class ProjectListController {
                     badge.getStyleClass().add("status-badge");
 
                     switch (item) {
-                        case "PLANNING":
-                            badge.getStyleClass().add("status-planning");
-                            break;
-                        case "IN_PROGRESS":
+                        case "ACTIVE":
                             badge.getStyleClass().add("status-in-progress");
+                            break;
+                        case "COMPLETED":
+                            badge.getStyleClass().add("status-planning");
                             break;
                         case "CLOSED":
                             badge.getStyleClass().add("status-closed");
@@ -123,26 +122,16 @@ public class ProjectListController {
 
     private void addActionsColumn() {
         colAction.setCellFactory(param -> new TableCell<ProjectDTO, ProjectDTO>() {
-            private final Button btnView = new Button("Xem");
             private final Button btnEdit = new Button("Sửa");
             private final Button btnDelete = new Button("Xóa");
-            private final HBox pane = new HBox(6, btnView, btnEdit, btnDelete);
+            private final HBox pane = new HBox(6, btnEdit, btnDelete);
 
             {
                 pane.setStyle("-fx-alignment: CENTER;");
-                btnView.getStyleClass().addAll("table-btn", "btn-view");
                 btnEdit.getStyleClass().addAll("table-btn", "btn-edit");
                 btnDelete.getStyleClass().addAll("table-btn", "btn-delete");
 
-                // View button - open board
-                btnView.setOnAction(e -> {
-                    ProjectDTO project = getItem();
-                    if (project != null) {
-                        openProjectBoard(project);
-                    }
-                });
-
-                // Edit button - open detail view
+                // Edit button - open detail view for editing and managing members
                 btnEdit.setOnAction(e -> {
                     ProjectDTO project = getItem();
                     if (project != null) {
@@ -150,7 +139,7 @@ public class ProjectListController {
                     }
                 });
 
-                // Delete button
+                // Delete button - only for Admin
                 btnDelete.setOnAction(e -> {
                     ProjectDTO project = getItem();
                     if (project != null) {
@@ -174,32 +163,32 @@ public class ProjectListController {
     // --- CÁC HÀM XỬ LÝ ---
 
     @FXML
-    private void handleSearch() {
-        loadData();
-    }
-
-    @FXML
     private void handleNewProject() {
+        // Nhấn "New Project" -> Nhập tên, mô tả -> Nhấn Save
+        // GỌI API: POST /api/projects
+        // XỬ LÝ: Thêm dự án mới vào danh sách đang hiển thị
         openProjectDetail(null); // Tạo mới thì vẫn dùng form Detail
     }
 
     private void handleDeleteProject(ProjectDTO project) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Xác nhận xóa");
-        alert.setHeaderText("Bạn có chắc muốn xóa dự án này?");
-        alert.setContentText("Dự án: " + project.getName());
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Xác nhận xóa");
+        confirmAlert.setHeaderText("Bạn có chắc muốn xóa dự án này?");
+        confirmAlert.setContentText("Dự án: " + project.getName());
         
-        Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            try {
-                projectApi.deleteProject(project.getId());
-                loadData();
-                showAlert("Thành công", "Xóa dự án thành công!");
-            } catch (Exception e) {
-                e.printStackTrace();
-                showAlert("Lỗi", "Không thể xóa dự án: " + e.getMessage());
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    // GỌI API: DELETE /api/projects/{id}
+                    ProjectApi.deleteProject(project.getId());
+                    loadData(); // Reload danh sách
+                    showAlert("Thành công", "Xóa dự án thành công!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert("Lỗi", "Không thể xóa dự án: " + e.getMessage());
+                }
             }
-        }
+        });
     }
 
     private void showAlert(String title, String message) {
@@ -212,18 +201,35 @@ public class ProjectListController {
 
     private void loadData() {
         try {
-            String keyword = txtKeyword.getText();
-            String status = cbStatus.getValue();
-            if ("Tất cả".equals(status)) status = "";
+            System.out.println("=== BẮT ĐẦU LOAD DATA ===");
+            // GỌI API: GET /api/projects
+            List<ProjectDTO> list = ProjectApi.getProjects();
             
-            List<ProjectDTO> list = projectApi.getProjects(keyword, status);
+            System.out.println("Số dự án nhận được: " + (list != null ? list.size() : 0));
+            if (list != null && !list.isEmpty()) {
+                for (ProjectDTO p : list) {
+                    System.out.println("  - Project: " + p.getName() + " (ID: " + p.getId() + ")");
+                }
+            }
+            
+            // Hiển thị danh sách dạng bảng
             tblProjects.setItems(FXCollections.observableArrayList(list));
+            
+            System.out.println("=== LOAD DATA THÀNH CÔNG ===");
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Lỗi load data: " + e.getMessage());
-            // Hiển thị bảng trống nếu lỗi
+            System.err.println("!!! LỖI LOAD DATA: " + e.getMessage());
+            
+            // Hiển thị alert cho user
+            showAlert("Lỗi", "Không thể tải danh sách dự án!\n" + e.getMessage());
             tblProjects.setItems(FXCollections.observableArrayList());
         }
+    }
+    
+    @FXML
+    private void handleSearch() {
+        // TODO: Implement search and filter functionality
+        loadData();
     }
 
     // Mở màn hình Sửa/Tạo (ProjectDetailView)
@@ -246,25 +252,4 @@ public class ProjectListController {
         }
     }
 
-    // Mở màn hình Board (ProjectBoardView) -> MỚI THÊM
-    private void openProjectBoard(ProjectDTO project) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/project/ProjectBoardView.fxml"));
-            Parent root = loader.load();
-            
-            ProjectBoardController controller = loader.getController();
-            controller.setProject(project);
-
-            Stage stage = new Stage();
-            stage.setTitle("Board: " + project.getName());
-            // stage.setMaximized(true); // Nếu muốn mở toàn màn hình
-            stage.setScene(new Scene(root));
-            stage.show(); // Dùng show() thay vì showAndWait() để có thể mở nhiều board cùng lúc nếu muốn
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Lỗi mở Board: " + e.getMessage());
-            alert.show();
-        }
-    }
 }

@@ -16,24 +16,30 @@
     </stylesheets>
 
     <top>
-        <VBox spacing="15" styleClass="content-header">
+        <VBox styleClass="content-header">
             <padding>
-                <Insets top="25" right="30" bottom="20" left="30"/>
+                <Insets top="30" right="30" bottom="25" left="30"/>
             </padding>
-
+            
+            <!-- Title Row -->
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label text="Quản Lý Người Dùng" styleClass="page-title"/>
-                
-                <Region HBox.hgrow="ALWAYS" />
-                
-                <HBox alignment="CENTER_RIGHT" spacing="10">
-                    <TextField fx:id="txtSearch" promptText="🔍 Tìm kiếm người dùng theo tên hoặc username..." 
-                               prefWidth="350" styleClass="search-input"/>
-                    <Button text="Tìm kiếm" onAction="#handleSearch" styleClass="btn-search"/>
-                    <Button text="+ Tạo Người Dùng" fx:id="btnCreateUser" 
-                            styleClass="btn-create"
-                            onAction="#handleCreateUser"/>
-                </HBox>
+                <Label text="👥 Quản Lý Người Dùng" styleClass="page-title"/>
+            </HBox>
+            
+            <!-- Search & Filter Row -->
+            <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 15 0 0 0;">
+                <ComboBox fx:id="cbRoleFilter" prefWidth="160" prefHeight="38"
+                          promptText="Tất cả"
+                          styleClass="filter-combo"/>
+                <TextField fx:id="txtSearch" prefWidth="350" prefHeight="38"
+                           promptText="🔍 Tìm kiếm người dùng theo tên hoặc username..."
+                           styleClass="search-field"/>
+                <Button text="Tìm kiếm" onAction="#handleSearch" prefHeight="38"
+                        styleClass="search-btn"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="+ Tạo Người Dùng" fx:id="btnCreateUser" prefHeight="38"
+                        onAction="#handleCreateUser"
+                        styleClass="btn-create"/>
             </HBox>
         </VBox>
     </top>
@@ -54,7 +60,7 @@
                 <TableColumn fx:id="colEmail" text="Email"/>
                 <TableColumn fx:id="colRole" text="Vai trò" visible="false"/> 
                 <TableColumn fx:id="colStatus" text="Trạng thái" prefWidth="120" maxWidth="150"/>
-                <TableColumn fx:id="colAction" text="Hành động" sortable="false" prefWidth="150" maxWidth="200"/>
+                <TableColumn fx:id="colAction" text="Hành động" sortable="false" prefWidth="280" minWidth="280" maxWidth="300"/>
             </columns>
         </TableView>
     </center>

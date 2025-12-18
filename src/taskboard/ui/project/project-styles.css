@@ -14,32 +14,99 @@
 /* Content Header */
 .content-header {
   -fx-background-color: #ffffff;
-  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
 }
 
 /* Page Title */
 .page-title {
-  -fx-font-size: 24px;
-  -fx-font-weight: 600;
-  -fx-text-fill: #2c3e50;
+  -fx-font-size: 32px;
+  -fx-font-weight: bold;
+  -fx-text-fill: #667eea;
 }
 
-/* Search Input */
-.search-input {
-  -fx-background-color: #f8f9fa;
-  -fx-border-color: #dee2e6;
-  -fx-border-width: 1px;
-  -fx-border-radius: 8px;
-  -fx-background-radius: 8px;
-  -fx-padding: 10px 15px;
+/* Count Label */
+.count-label {
   -fx-font-size: 14px;
-  -fx-text-fill: #495057;
+  -fx-font-weight: 600;
+  -fx-text-fill: #94a3b8;
+  -fx-background-color: #f1f5f9;
+  -fx-padding: 6 14;
+  -fx-background-radius: 20px;
 }
 
-.search-input:focused {
+/* Filter Combo */
+.filter-combo {
+  -fx-background-color: white;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 2;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-font-size: 13px;
+  -fx-font-weight: 500;
+}
+
+.filter-combo:focused {
   -fx-border-color: #667eea;
-  -fx-background-color: #ffffff;
-  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
+}
+
+/* Search Field */
+.search-field {
+  -fx-background-color: white;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 2;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-font-size: 14px;
+  -fx-padding: 8 15;
+}
+
+.search-field:focused {
+  -fx-border-color: #667eea;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
+}
+
+/* Search Button */
+.search-btn {
+  -fx-background-color: #667eea;
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-weight: 600;
+  -fx-padding: 8 24;
+  -fx-background-radius: 8;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.3), 8, 0, 0, 3);
+}
+
+.search-btn:hover {
+  -fx-background-color: #5568d3;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.5), 12, 0, 0, 4);
+  -fx-scale-y: 1.02;
+}
+
+.search-btn:pressed {
+  -fx-translate-y: 1px;
+}
+
+/* Create Button - Updated for consistency */
+.btn-create {
+  -fx-background-color: linear-gradient(to right, #667eea, #764ba2);
+  -fx-text-fill: white;
+  -fx-font-size: 14px;
+  -fx-font-weight: 600;
+  -fx-padding: 8 24;
+  -fx-background-radius: 8;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.4), 8, 0, 0, 2);
+}
+
+.btn-create:hover {
+  -fx-background-color: linear-gradient(to right, #5568d3, #6a3f8f);
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.6), 12, 0, 0, 3);
+  -fx-scale-y: 1.02;
+}
+
+.btn-create:pressed {
+  -fx-translate-y: 1px;
 }
 
 /* Combo Filter - Modern Design */
@@ -240,6 +307,51 @@
   -fx-border-color: #667eea;
 }
 
+/* ComboBox Popup/Dropdown Styling */
+.combo-box .list-view {
+  -fx-background-color: #ffffff;
+  -fx-border-color: #cbd5e0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 12, 0, 0, 4);
+  -fx-padding: 6;
+}
+
+/* ComboBox Dropdown Items - Boxed Style */
+.combo-box .list-view .list-cell {
+  -fx-background-color: #f8f9fa;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 6;
+  -fx-background-radius: 6;
+  -fx-padding: 10px 16px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #2c3e50;
+  -fx-font-weight: 500;
+}
+
+.combo-box .list-view .list-cell:hover {
+  -fx-background-color: #e7f0ff;
+  -fx-border-color: #667eea;
+  -fx-text-fill: #667eea;
+  -fx-font-weight: 600;
+  -fx-cursor: hand;
+}
+
+.combo-box .list-view .list-cell:selected {
+  -fx-background-color: #667eea;
+  -fx-border-color: #667eea;
+  -fx-text-fill: #ffffff;
+  -fx-font-weight: 600;
+}
+
+/* Selected item display in ComboBox button */
+.combo-box .list-cell {
+  -fx-text-fill: #2c3e50;
+  -fx-font-weight: 500;
+}
+
 /* ============================================
    TABLE VIEW (MATCHING USER MANAGEMENT)
    ============================================ */
@@ -367,7 +479,7 @@
 /* Legacy styles removed - now using unified table styles above */
 
 /* ============================================
-   LIST VIEW - Task Cards
+   LIST VIEW - Task Cards & Members
    ============================================ */
 
 .list-view {
@@ -376,16 +488,44 @@
 }
 
 .list-cell {
-  -fx-background-color: transparent;
-  -fx-padding: 6 8;
+  -fx-background-color: #ffffff;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 1px;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-padding: 12px 16px;
+  -fx-font-size: 14px;
+  -fx-text-fill: #2c3e50;
+  -fx-font-weight: 500;
+}
+
+.list-cell:filled {
+  -fx-background-color: #f8f9fa;
+  -fx-border-color: #cbd5e0;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.04), 4, 0, 0, 1);
 }
 
 .list-cell:hover {
-  -fx-background-color: transparent;
+  -fx-background-color: #e7f0ff;
+  -fx-border-color: #667eea;
+  -fx-cursor: hand;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.15), 6, 0, 0, 2);
 }
 
 .list-cell:selected {
+  -fx-background-color: #dce7ff;
+  -fx-border-color: #667eea;
+  -fx-border-width: 2px;
+  -fx-font-weight: 600;
+  -fx-text-fill: #667eea;
+  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 6, 0, 0, 2);
+}
+
+/* Empty cells should remain transparent */
+.list-cell:empty {
   -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-opacity: 0;
 }
 
 /* Task Card Hover Effect */

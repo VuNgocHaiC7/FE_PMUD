@@ -41,26 +41,30 @@ public class LoginController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        // 1. Validate sơ bộ
+        // 1. Validate đầu vào
         if (username.isEmpty() || password.isEmpty()) {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin!", AlertType.WARNING);
             return;
         }
 
         try {
-            // 2. GỌI API ĐĂNG NHẬP
+            // 2. GỌI API: POST /api/auth/login
             LoginResponse response = AuthApi.login(username, password);
 
-            // 3. LƯU THÔNG TIN VÀO CONTEXT
-            // Bước này cực kỳ quan trọng để dùng Token cho các API sau này
+            // 3. XỬ LÝ THÀNH CÔNG:
+            // - Lưu Token và FullName vào biến toàn cục (Session)
             AuthContext.getInstance().setToken(response.token);
-            AuthContext.getInstance().setUserId(response.userId);
-            AuthContext.getInstance().setFullName(response.fullName);
+            AuthContext.getInstance().setUserId(response.userId);            AuthContext.getInstance().setUsername(response.username);            AuthContext.getInstance().setFullName(response.fullName);
             AuthContext.getInstance().setRoles(response.roles);
 
-            System.out.println("Đăng nhập thành công: " + response.fullName);
+            System.out.println("✓ Đăng nhập thành công!");
+            System.out.println("  User: " + response.fullName);
+            System.out.println("  Roles: " + response.roles);
 
-            // 4. CHUYỂN SANG MÀN HÌNH CHÍNH (MAIN VIEW CÓ MENU)
+            // 4. Kiểm tra Role để phân quyền (nếu cần)
+            // Có thể dùng để hiển thị menu khác nhau cho Admin/PM/Member
+
+            // 5. Chuyển sang màn hình Danh sách dự án (MainView)
             switchToMainView();
 
         } catch (Exception e) {
@@ -72,12 +76,18 @@ public class LoginController {
     // --- HÀM CHUYỂN HƯỚNG QUAN TRỌNG ---
     private void switchToMainView() {
         try {
+            System.out.println(">>> Bắt đầu chuyển sang MainView...");
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/main/MainView.fxml"));
+            System.out.println(">>> Đường dẫn FXML: " + getClass().getResource("/taskboard/ui/main/MainView.fxml"));
+            
             Parent mainRoot = loader.load();
+            System.out.println(">>> Load FXML thành công!");
 
             // 1. Đóng cửa sổ Login cũ lại
             Stage oldStage = (Stage) loginButton.getScene().getWindow();
             oldStage.close();
+            System.out.println(">>> Đã đóng cửa sổ login cũ");
 
             // 2. Tạo cửa sổ mới cho Main App
             Stage newStage = new Stage();
@@ -87,9 +97,12 @@ public class LoginController {
             // Mở lên là full màn hình luôn
             newStage.setMaximized(true);
             newStage.show();
+            System.out.println(">>> Hiển thị MainView thành công!");
 
         } catch (Exception e) {
+            System.err.println("!!! LỖI KHI CHUYỂN SANG MAINVIEW !!!");
             e.printStackTrace();
+            showAlert("Lỗi", "Không thể chuyển sang màn hình chính!\n" + e.getMessage(), AlertType.ERROR);
         }
     }
 

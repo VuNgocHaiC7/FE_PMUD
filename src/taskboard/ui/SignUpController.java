@@ -62,15 +62,15 @@ public class SignUpController {
             return;
         }
 
-        // 4. Gọi API Đăng ký
+        // 4. GỌI API: POST /api/auth/register
         try {
-            // Gọi hàm register bên AuthApi (kết nối server thật nếu IS_MOCK = false)
             AuthApi.register(user, pass, email, fullName);
 
-            // Nếu không có lỗi -> Thành công
+            // 5. XỬ LÝ THÀNH CÔNG:
+            // - Thông báo thành công
             showAlert("Thành công", "Đăng ký thành công! Bạn sẽ được chuyển về màn hình đăng nhập.");
             
-            // Tự động chuyển về màn hình Login
+            // - Chuyển về form Login
             handleSwitchToLogin(null);
 
         } catch (Exception e) {

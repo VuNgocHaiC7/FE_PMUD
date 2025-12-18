@@ -14,52 +14,77 @@
 /* --- CONTENT HEADER --- */
 .content-header {
   -fx-background-color: #ffffff;
-  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 8, 0, 0, 2);
+  -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.08), 8, 0, 0, 2);
 }
 
 /* --- PAGE TITLE --- */
 .page-title {
-  -fx-font-size: 24px;
-  -fx-font-weight: 600;
-  -fx-text-fill: #2c3e50;
+  -fx-font-size: 32px !important;
+  -fx-font-weight: bold !important;
+  -fx-text-fill: #667eea !important;
 }
 
-/* --- SEARCH INPUT --- */
-.search-input {
-  -fx-background-color: #f8f9fa;
-  -fx-border-color: #dee2e6;
-  -fx-border-width: 1px;
-  -fx-border-radius: 8px;
-  -fx-background-radius: 8px;
-  -fx-padding: 10px 15px;
+/* --- COUNT LABEL --- */
+.count-label {
   -fx-font-size: 14px;
-  -fx-text-fill: #495057;
+  -fx-font-weight: 600;
+  -fx-text-fill: #94a3b8;
+  -fx-background-color: #f1f5f9;
+  -fx-padding: 6 14;
+  -fx-background-radius: 20px;
 }
 
-.search-input:focused {
+/* --- FILTER COMBO --- */
+.filter-combo {
+  -fx-background-color: white;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 2;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-font-size: 13px;
+  -fx-font-weight: 500;
+}
+
+.filter-combo:focused {
   -fx-border-color: #667eea;
-  -fx-background-color: #ffffff;
-  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
+}
+
+/* --- SEARCH FIELD --- */
+.search-field {
+  -fx-background-color: white;
+  -fx-border-color: #e2e8f0;
+  -fx-border-width: 2;
+  -fx-border-radius: 8;
+  -fx-background-radius: 8;
+  -fx-font-size: 14px;
+  -fx-padding: 8 15;
+}
+
+.search-field:focused {
+  -fx-border-color: #667eea;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.2), 8, 0, 0, 0);
 }
 
 /* --- BUTTONS --- */
-.btn-search {
-  -fx-background-color: #ffffff;
-  -fx-border-color: #667eea;
-  -fx-border-width: 2px;
-  -fx-border-radius: 8px;
-  -fx-background-radius: 8px;
-  -fx-text-fill: #667eea;
-  -fx-font-weight: 600;
+.search-btn {
+  -fx-background-color: #667eea;
+  -fx-text-fill: white;
   -fx-font-size: 14px;
-  -fx-padding: 10px 20px;
+  -fx-font-weight: 600;
+  -fx-padding: 8 24;
+  -fx-background-radius: 8;
   -fx-cursor: hand;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.3), 8, 0, 0, 3);
 }
 
-.btn-search:hover {
-  -fx-background-color: #667eea;
-  -fx-text-fill: #ffffff;
-  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.3), 10, 0, 0, 2);
+.search-btn:hover {
+  -fx-background-color: #5568d3;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.5), 12, 0, 0, 4);
+  -fx-scale-y: 1.02;
+}
+
+.search-btn:pressed {
+  -fx-translate-y: 1px;
 }
 
 .btn-create {
@@ -67,17 +92,20 @@
   -fx-text-fill: #ffffff;
   -fx-font-weight: 600;
   -fx-font-size: 14px;
-  -fx-padding: 10px 24px;
-  -fx-background-radius: 8px;
+  -fx-padding: 8 24;
+  -fx-background-radius: 8;
   -fx-cursor: hand;
-  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.4), 8, 0, 0, 2);
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.4), 8, 0, 0, 2);
 }
 
 .btn-create:hover {
   -fx-background-color: linear-gradient(to right, #5568d3, #6a3f8f);
-  -fx-effect: dropshadow(gaussian, rgba(102, 126, 234, 0.6), 12, 0, 0, 3);
-  -fx-scale-x: 1.02;
+  -fx-effect: dropshadow(three-pass-box, rgba(102, 126, 234, 0.6), 12, 0, 0, 3);
   -fx-scale-y: 1.02;
+}
+
+.btn-create:pressed {
+  -fx-translate-y: 1px;
 }
 
 /* --- TEXT FIELD & TEXT AREA (Dialog) --- */

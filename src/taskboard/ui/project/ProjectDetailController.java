@@ -22,14 +22,13 @@ public class ProjectDetailController {
     @FXML private ListView<UserDTO> lvMembers;
 
     private ProjectDTO currentProject;
-    private ProjectApi projectApi = new ProjectApi();
 
     @FXML
     public void initialize() {
         System.out.println("DEBUG: ProjectDetailController.initialize() được gọi");
         
-        // 1. Khởi tạo danh sách trạng thái
-        cbStatus.setItems(FXCollections.observableArrayList("PLANNING", "IN_PROGRESS", "CLOSED"));
+        // 1. Khởi tạo danh sách trạng thái (phải khớp với Backend)
+        cbStatus.setItems(FXCollections.observableArrayList("ACTIVE", "COMPLETED", "CLOSED"));
 
         // 2. Tạo Menu chuột phải cho Danh sách thành viên để XÓA
         ContextMenu contextMenu = new ContextMenu();
@@ -73,7 +72,7 @@ public class ProjectDetailController {
             
             // Load danh sách user hệ thống để chọn thêm
             System.out.println("DEBUG: Đang tải danh sách users...");
-            List<UserDTO> allUsers = projectApi.getAllSystemUsers();
+            List<UserDTO> allUsers = ProjectApi.getAllSystemUsers();
             System.out.println("DEBUG: Đã tải " + (allUsers != null ? allUsers.size() : 0) + " users");
             cbAllUsers.setItems(FXCollections.observableArrayList(allUsers));
         } catch (Exception e) {
@@ -85,7 +84,7 @@ public class ProjectDetailController {
         if (project == null) {
             // --- MODE TẠO MỚI ---
             tabMembers.setDisable(true); // Tạo xong mới được thêm thành viên
-            cbStatus.getSelectionModel().select("PLANNING");
+            cbStatus.getSelectionModel().select("ACTIVE"); // Default status
         } else {
             // --- MODE SỬA (EDIT) / ĐÓNG ---
             System.out.println("DEBUG: Đang load thông tin project vào form...");
@@ -103,7 +102,7 @@ public class ProjectDetailController {
 
     @FXML
     private void handleSave() {
-        // Logic này xử lý cả TẠO MỚI (Create) và SỬA/ĐÓNG (Update)
+        // Logic này xử lý cả TẠO MỚI (Create) và SỬA (Update)
         
         if (txtName.getText().isEmpty() || cbStatus.getValue() == null) {
             showAlert("Lỗi", "Vui lòng nhập tên và trạng thái!");
@@ -116,15 +115,20 @@ public class ProjectDetailController {
         currentProject.setDescription(txtDesc.getText());
         currentProject.setStartDate(dpStart.getValue());
         currentProject.setEndDate(dpEnd.getValue());
-        
-        // >>> CHỨC NĂNG ĐÓNG PROJECT: Người dùng chỉ cần chọn status là "CLOSED" ở giao diện và bấm Lưu
         currentProject.setStatus(cbStatus.getValue()); 
 
-        if (projectApi.saveProject(currentProject)) {
+        try {
+            if (currentProject.getId() == null) {
+                // GỌI API: POST /api/projects
+                ProjectApi.createProject(currentProject);
+            } else {
+                // GỌI API: PUT /api/projects/{id} (Chỉ Admin)
+                ProjectApi.updateProject(currentProject);
+            }
             showAlert("Thành công", "Đã lưu dự án!");
             closeWindow();
-        } else {
-            showAlert("Thất bại", "Lỗi khi lưu dự án.");
+        } catch (Exception e) {
+            showAlert("Thất bại", "Lỗi khi lưu dự án: " + e.getMessage());
         }
     }
 
@@ -136,15 +140,20 @@ public class ProjectDetailController {
             return;
         }
         
-        // Gọi API thêm
-        boolean success = projectApi.addMember(currentProject.getId(), selectedUser);
-        if (success) {
-            loadMembers(); // Reload lại list
+        try {
+            // GỌI API: POST /api/projects/{id}/members
+            // Thêm: Chọn user từ dropdown -> Nhấn Add
+            ProjectApi.addMember(currentProject.getId(), selectedUser.getId());
+            
+            // Reload lại list để hiển thị member mới
+            loadMembers();
             showAlert("Thành công", "Đã thêm: " + selectedUser.getFullName());
+        } catch (Exception e) {
+            showAlert("Lỗi", "Không thể thêm thành viên: " + e.getMessage());
         }
     }
 
-    // >>> CHỨC NĂNG MỚI: XÓA THÀNH VIÊN
+    // CHỨC NĂNG XÓA THÀNH VIÊN
     private void handleRemoveMember() {
         UserDTO selectedUser = lvMembers.getSelectionModel().getSelectedItem();
         if (selectedUser == null) return;
@@ -157,18 +166,28 @@ public class ProjectDetailController {
         
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            // Gọi API xóa
-            boolean success = projectApi.removeMember(currentProject.getId(), selectedUser.getId());
-            if (success) {
-                loadMembers(); // Reload lại list
+            try {
+                // GỌI API: DELETE /api/projects/{id}/members/{userId}
+                // Xóa: Chọn member -> Nhấn Remove
+                ProjectApi.removeMember(currentProject.getId(), selectedUser.getId());
+                
+                // Reload lại list
+                loadMembers();
+            } catch (Exception e) {
+                showAlert("Lỗi", "Không thể xóa thành viên: " + e.getMessage());
             }
         }
     }
 
     private void loadMembers() {
         if (currentProject != null && currentProject.getId() != null) {
-            List<UserDTO> members = projectApi.getProjectMembers(currentProject.getId());
-            lvMembers.setItems(FXCollections.observableArrayList(members));
+            try {
+                List<UserDTO> members = ProjectApi.getProjectMembers(currentProject.getId());
+                lvMembers.setItems(FXCollections.observableArrayList(members));
+            } catch (Exception e) {
+                System.err.println("Lỗi load members: " + e.getMessage());
+                lvMembers.setItems(FXCollections.observableArrayList());
+            }
         }
     }
     

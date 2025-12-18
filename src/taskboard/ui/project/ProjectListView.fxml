@@ -14,25 +14,29 @@
     </stylesheets>
 
     <top>
-        <VBox spacing="15" styleClass="content-header">
+        <VBox styleClass="content-header">
             <padding>
-                <Insets top="25" right="30" bottom="20" left="30"/>
+                <Insets top="30" right="30" bottom="25" left="30"/>
             </padding>
-
+            
+            <!-- Title Row -->
             <HBox alignment="CENTER_LEFT" spacing="15">
-                <Label text="Quản Lý Dự Án và Thành Viên" styleClass="page-title"/>
-                
-                <Region HBox.hgrow="ALWAYS" />
-                
-                <HBox alignment="CENTER_RIGHT" spacing="10">
-                    <TextField fx:id="txtKeyword" promptText="🔍 Tìm kiếm dự án theo tên..." 
-                               prefWidth="350" styleClass="search-input"/>
-                    <Button text="Tìm kiếm" onAction="#handleSearch" styleClass="btn-search"/>
-                    <ComboBox fx:id="cbStatus" promptText="Trạng thái" prefWidth="140" 
-                              styleClass="combo-filter"/>
-                    <Button text="+ Tạo Dự Án Mới" onAction="#handleNewProject" 
-                            styleClass="btn-create"/>
-                </HBox>
+                <Label text="📁 Quản Lý Dự Án và Thành Viên" styleClass="page-title"/>
+            </HBox>
+            
+            <!-- Search & Filter Row -->
+            <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 15 0 0 0;">
+                <ComboBox fx:id="cbStatusFilter" prefWidth="160" prefHeight="38"
+                          promptText="Tất cả"
+                          styleClass="filter-combo"/>
+                <TextField fx:id="txtSearchProject" prefWidth="300" prefHeight="38"
+                           promptText="🔍 Tìm kiếm dự án..."
+                           styleClass="search-field"/>
+                <Button text="Tìm kiếm" onAction="#handleSearch" prefHeight="38"
+                        styleClass="search-btn"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="+ Tạo Dự Án Mới" onAction="#handleNewProject" prefHeight="38"
+                        styleClass="btn-create"/>
             </HBox>
         </VBox>
     </top>
@@ -49,10 +53,10 @@
             <columns>
                 <TableColumn fx:id="colName" text="Tên Dự Án" prefWidth="250"/>
                 <TableColumn fx:id="colPM" text="Quản Lý (PM)" prefWidth="180"/>
-                <TableColumn fx:id="colStatus" text="Trạng Thái" prefWidth="130" maxWidth="150"/>
+                <TableColumn fx:id="colStatus" text="Trạng Thái" prefWidth="180" maxWidth="200"/>
                 <TableColumn fx:id="colStart" text="Ngày Bắt Đầu" prefWidth="140" maxWidth="160"/>
                 <TableColumn fx:id="colEnd" text="Ngày Kết Thúc" prefWidth="140" maxWidth="160"/>
-                <TableColumn fx:id="colAction" text="Hành động" sortable="false" prefWidth="150" maxWidth="200"/>
+                <TableColumn fx:id="colAction" text="Thao tác" sortable="false" prefWidth="120" maxWidth="150"/>
             </columns>
         </TableView>
     </center>

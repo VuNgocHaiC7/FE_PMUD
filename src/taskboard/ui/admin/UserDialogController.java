@@ -14,8 +14,8 @@ public class UserDialogController {
 
     @FXML
     public void initialize() {
-        // Khởi tạo danh sách quyền
-        cbRole.getItems().addAll("ADMIN", "PM", "MEMBER");
+        // Khởi tạo danh sách quyền (chỉ ADMIN và MEMBER)
+        cbRole.getItems().addAll("ADMIN", "MEMBER");
         cbRole.getSelectionModel().select("MEMBER"); // Mặc định chọn Member
     }
 

@@ -3,42 +3,68 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
-<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
-      fx:controller="taskboard.ui.kanbanBoard.KanbanProjectListController"
-      spacing="0" style="-fx-background-color: #ffffff;">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="taskboard.ui.kanbanBoard.KanbanProjectListController"
+            styleClass="kanban-root">
 
-    <!-- Header -->
-    <VBox spacing="8" style="-fx-padding: 30 30 20 30; -fx-background-color: #ffffff;">
-        <Label text="Bảng Công Việc" 
-               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #1a202c;"/>
-    </VBox>
+    <stylesheets>
+        <URL value="@kanban-styles.css"/>
+    </stylesheets>
 
-    <!-- Search Section -->
-    <HBox spacing="12" alignment="CENTER_LEFT" style="-fx-padding: 0 30 20 30; -fx-background-color: #ffffff;">
-        <ComboBox fx:id="cbStatus" prefWidth="150" prefHeight="40"
-                  promptText="Tất cả"
-                  style="-fx-font-size: 13px; -fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6;"/>
-        <TextField fx:id="txtKeyword" prefWidth="350" prefHeight="40"
-                   promptText="Tìm kiếm dự án theo tên..."
-                   style="-fx-font-size: 13px; -fx-padding: 10 15; -fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 1; -fx-border-radius: 6; -fx-background-radius: 6;"/>
-        <Button text="🔍 Tìm kiếm" onAction="#handleSearch" prefHeight="40"
-                style="-fx-background-color: #667eea; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 24; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-weight: 600;"/>
-    </HBox>
+    <!-- Header Section -->
+    <top>
+        <VBox styleClass="kanban-header">
+            <padding>
+                <Insets top="30" right="30" bottom="25" left="30"/>
+            </padding>
+            
+            <!-- Title Row -->
+            <HBox alignment="CENTER_LEFT" spacing="15">
+                <Label text="📋 Bảng Công Việc" styleClass="kanban-page-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lblProjectCount" text="0 dự án" styleClass="project-count-label"/>
+            </HBox>
+        </VBox>
+    </top>
 
-    <!-- Project List Table -->
-    <TableView fx:id="tblProjects" VBox.vgrow="ALWAYS" 
-               style="-fx-background-color: #ffffff; -fx-padding: 0 30 30 30; -fx-border-color: transparent;">
-        <columns>
-            <TableColumn fx:id="colName" text="Tên Dự Án" prefWidth="280"/>
-            <TableColumn fx:id="colPM" text="Quản Lý (PM)" prefWidth="220"/>
-            <TableColumn fx:id="colStatus" text="Trạng Thái" prefWidth="160"/>
-            <TableColumn fx:id="colStart" text="Ngày Bắt Đầu" prefWidth="140"/>
-            <TableColumn fx:id="colEnd" text="Ngày Kết Thúc" prefWidth="140"/>
-        </columns>
-        <placeholder>
-            <Label text="Không có dự án nào. Hãy tạo dự án mới!" 
-                   style="-fx-font-size: 13px; -fx-text-fill: #a0aec0;"/>
-        </placeholder>
-    </TableView>
-</VBox>
+    <!-- Main Content: Grid of Project Cards -->
+    <center>
+        <ScrollPane fitToWidth="true" fitToHeight="true" styleClass="cards-scroll-pane">
+            <VBox styleClass="cards-container" spacing="20">
+                <padding>
+                    <Insets top="10" right="30" bottom="30" left="30"/>
+                </padding>
+    
+                <FlowPane fx:id="projectCardsPane" 
+                          hgap="20" vgap="20" 
+                          styleClass="project-cards-grid">
+                </FlowPane>
+                
+                <!-- Empty State -->
+                <VBox fx:id="emptyState" alignment="CENTER" spacing="15" 
+                      style="-fx-min-height: 400px;" visible="false" managed="false">
+                    <Label text="📂" style="-fx-font-size: 48px;"/>
+                    <Label text="Không có dự án nào" 
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #64748b;"/>
+                    <Label text="Hãy tạo dự án mới hoặc thay đổi bộ lọc" 
+                           style="-fx-font-size: 13px; -fx-text-fill: #94a3b8;"/>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </center>
+    
+    <!-- Keep the hidden table for compatibility -->
+    <bottom>
+        <TableView fx:id="tblProjects" visible="false" managed="false">
+            <columns>
+                <TableColumn fx:id="colName" text="Tên Dự Án"/>
+                <TableColumn fx:id="colPM" text="Quản Lý (PM)"/>
+                <TableColumn fx:id="colStatus" text="Trạng Thái"/>
+                <TableColumn fx:id="colStart" text="Ngày Bắt Đầu"/>
+                <TableColumn fx:id="colEnd" text="Ngày Kết Thúc"/>
+            </columns>
+        </TableView>
+    </bottom>
+</BorderPane>

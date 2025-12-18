@@ -24,7 +24,6 @@ public class ProjectBoardController {
     @FXML private ListView<TaskDTO> lvDone;
 
     private ProjectDTO project;
-    private TaskApi taskApi = new TaskApi();
 
     public void setProject(ProjectDTO project) {
         this.project = project;
@@ -46,27 +45,43 @@ public class ProjectBoardController {
 
         System.out.println("DEBUG: Loading tasks cho project " + project.getId());
         
-        // Load tasks theo từng status
-        List<TaskDTO> todoTasks = taskApi.getTasksByStatus(project.getId(), "TODO");
-        List<TaskDTO> doingTasks = taskApi.getTasksByStatus(project.getId(), "DOING");
-        List<TaskDTO> doneTasks = taskApi.getTasksByStatus(project.getId(), "DONE");
+        try {
+            // GỌI API: GET /api/projects/{id}/tasks
+            List<TaskDTO> allTasks = TaskApi.getTasksByProject(project.getId());
+            
+            // XỬ LÝ LOGIC: Duyệt list task trả về, dựa vào trường status để phân loại
+            List<TaskDTO> todoTasks = allTasks.stream()
+                .filter(t -> "ToDo".equalsIgnoreCase(t.getStatus()) || "TODO".equalsIgnoreCase(t.getStatus()))
+                .toList();
+            
+            List<TaskDTO> doingTasks = allTasks.stream()
+                .filter(t -> "InProgress".equalsIgnoreCase(t.getStatus()) || "DOING".equalsIgnoreCase(t.getStatus()))
+                .toList();
+            
+            List<TaskDTO> doneTasks = allTasks.stream()
+                .filter(t -> "Done".equalsIgnoreCase(t.getStatus()) || "DONE".equalsIgnoreCase(t.getStatus()))
+                .toList();
 
-        System.out.println("DEBUG: TODO=" + todoTasks.size() + ", DOING=" + doingTasks.size() + ", DONE=" + doneTasks.size());
+            System.out.println("DEBUG: TODO=" + todoTasks.size() + ", DOING=" + doingTasks.size() + ", DONE=" + doneTasks.size());
 
-        // Hiển thị lên ListView
-        lvTodo.setItems(FXCollections.observableArrayList(todoTasks));
-        lvDoing.setItems(FXCollections.observableArrayList(doingTasks));
-        lvDone.setItems(FXCollections.observableArrayList(doneTasks));
+            // Vẽ Card vào 3 cột tương ứng (ToDo, InProgress, Done)
+            lvTodo.setItems(FXCollections.observableArrayList(todoTasks));
+            lvDoing.setItems(FXCollections.observableArrayList(doingTasks));
+            lvDone.setItems(FXCollections.observableArrayList(doneTasks));
 
-        // Cấu hình cách hiển thị Task trong ListView
-        configureCellFactory(lvTodo);
-        configureCellFactory(lvDoing);
-        configureCellFactory(lvDone);
+            // Cấu hình cách hiển thị Task trong ListView
+            configureCellFactory(lvTodo);
+            configureCellFactory(lvDoing);
+            configureCellFactory(lvDone);
 
-        // Thêm context menu (click chuột phải) để Sửa/Xóa task
-        setupContextMenu(lvTodo);
-        setupContextMenu(lvDoing);
-        setupContextMenu(lvDone);
+            // Thêm context menu (click chuột phải) để Sửa/Xóa task
+            setupContextMenu(lvTodo);
+            setupContextMenu(lvDoing);
+            setupContextMenu(lvDone);
+        } catch (Exception e) {
+            System.err.println("Lỗi load tasks: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void configureCellFactory(ListView<TaskDTO> listView) {
@@ -109,11 +124,67 @@ public class ProjectBoardController {
                         card.getChildren().addAll(lblTitle, lblUnassigned);
                     }
                     
+                    // === CHỨC NĂNG KÉO THẢ (DRAG & DROP) ===
+                    // Khi user kéo Card
+                    card.setOnDragDetected(event -> {
+                        javafx.scene.input.Dragboard db = card.startDragAndDrop(javafx.scene.input.TransferMode.MOVE);
+                        javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
+                        content.putString(String.valueOf(task.getId()));
+                        db.setContent(content);
+                        event.consume();
+                    });
+                    
+                    // Double click để xem chi tiết
+                    card.setOnMouseClicked(event -> {
+                        if (event.getClickCount() == 2) {
+                            handleEditTask(task);
+                        }
+                    });
+                    
                     setText(null);
                     setGraphic(card);
                     setStyle("-fx-background-color: transparent; -fx-padding: 6 8;");
                 }
             }
+        });
+        
+        // === XỬ LÝ THẢ (DROP) VÀO CỘT ===
+        // Khi user kéo Card từ cột A sang cột B
+        listView.setOnDragOver(event -> {
+            if (event.getGestureSource() != listView && event.getDragboard().hasString()) {
+                event.acceptTransferModes(javafx.scene.input.TransferMode.MOVE);
+            }
+            event.consume();
+        });
+        
+        listView.setOnDragDropped(event -> {
+            javafx.scene.input.Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasString()) {
+                Long taskId = Long.parseLong(db.getString());
+                
+                // Xác định status mới dựa vào cột được thả vào
+                String newStatus = "";
+                if (listView == lvTodo) newStatus = "ToDo";
+                else if (listView == lvDoing) newStatus = "InProgress";
+                else if (listView == lvDone) newStatus = "Done";
+                
+                try {
+                    // Sự kiện onDragDropped -> GỌI API: PUT /api/tasks/{id}/status
+                    // Lưu ý: API này cho phép cả Admin & Member
+                    TaskApi.updateTaskStatus(taskId, newStatus);
+                    System.out.println("✓ Đã chuyển task " + taskId + " sang " + newStatus);
+                    
+                    // Reload lại board để UI cập nhật đúng vị trí
+                    loadTasks();
+                    success = true;
+                } catch (Exception e) {
+                    System.err.println("✗ Lỗi khi cập nhật status: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+            event.setDropCompleted(success);
+            event.consume();
         });
     }
 
@@ -183,6 +254,9 @@ public class ProjectBoardController {
 
     @FXML
     private void handleAddTask() {
+        // Nhấn nút "Add Task" -> Nhập Tên, Deadline, Assignee -> Nhấn Save
+        // GỌI API: POST /api/tasks (Chỉ Admin)
+        // XỬ LÝ: Vẽ thêm Card mới vào cột ToDo
         openTaskDialog(null); // null = tạo mới
     }
 
@@ -213,9 +287,16 @@ public class ProjectBoardController {
             // Kiểm tra xem user có bấm Lưu không
             if (controller.isSaved()) {
                 TaskDTO savedTask = controller.getTask();
-                if (taskApi.saveTask(savedTask)) {
+                try {
+                    if (savedTask.getId() == null || savedTask.getId() == 0L) {
+                        TaskApi.createTask(savedTask);
+                    } else {
+                        TaskApi.updateTask(savedTask);
+                    }
                     loadTasks(); // Reload lại board
                     showAlert("Thành công", task == null ? "Đã tạo task mới!" : "Đã cập nhật task!");
+                } catch (Exception e) {
+                    showAlert("Lỗi", "Không thể lưu task: " + e.getMessage());
                 }
             }
 
@@ -233,9 +314,12 @@ public class ProjectBoardController {
         
         confirm.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                if (taskApi.deleteTask(task.getId())) {
+                try {
+                    TaskApi.deleteTask(task.getId());
                     loadTasks(); // Reload lại danh sách
                     showAlert("Thành công", "Đã xóa task!");
+                } catch (Exception e) {
+                    showAlert("Lỗi", "Không thể xóa task: " + e.getMessage());
                 }
             }
         });

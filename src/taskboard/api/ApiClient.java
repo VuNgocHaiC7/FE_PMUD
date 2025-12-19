@@ -9,8 +9,8 @@ import java.time.Duration;
 
 public class ApiClient {
     // >>> CẬP NHẬT ĐỊA CHỈ SERVER MỚI <<<
-    // Lưu ý: Tôi lấy phần gốc là ".../tms/api", các phần sau sẽ là endpoint
-    private static final String BASE_URL = "http://localhost:8080/api";
+    // Lưu ý:lấy phần gốc là ".../tms/api", các phần sau sẽ là endpoint
+    private static final String BASE_URL = "https://miki-untactical-instrumentally.ngrok-free.dev/api";
     
     // ... (Phần code còn lại giữ nguyên không đổi) ...
     private static final HttpClient client = HttpClient.newBuilder()

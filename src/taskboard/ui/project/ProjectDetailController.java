@@ -27,8 +27,8 @@ public class ProjectDetailController {
     public void initialize() {
         System.out.println("DEBUG: ProjectDetailController.initialize() được gọi");
         
-        // 1. Khởi tạo danh sách trạng thái (phải khớp với Backend)
-        cbStatus.setItems(FXCollections.observableArrayList("ACTIVE", "COMPLETED", "CLOSED"));
+        // 1. Khởi tạo danh sách trạng thái (hiển thị tiếng Việt)
+        cbStatus.setItems(FXCollections.observableArrayList("ĐANG HOẠT ĐỘNG", "HOÀN THÀNH", "ĐÃ ĐÓNG"));
 
         // 2. Tạo Menu chuột phải cho Danh sách thành viên để XÓA
         ContextMenu contextMenu = new ContextMenu();
@@ -84,7 +84,7 @@ public class ProjectDetailController {
         if (project == null) {
             // --- MODE TẠO MỚI ---
             tabMembers.setDisable(true); // Tạo xong mới được thêm thành viên
-            cbStatus.getSelectionModel().select("ACTIVE"); // Default status
+            cbStatus.getSelectionModel().select("ĐANG HOẠT ĐỘNG"); // Default status
         } else {
             // --- MODE SỬA (EDIT) / ĐÓNG ---
             System.out.println("DEBUG: Đang load thông tin project vào form...");
@@ -92,7 +92,7 @@ public class ProjectDetailController {
             txtDesc.setText(project.getDescription());
             dpStart.setValue(project.getStartDate());
             dpEnd.setValue(project.getEndDate());
-            cbStatus.setValue(project.getStatus()); // Load trạng thái hiện tại (có thể là CLOSED)
+            cbStatus.setValue(convertStatusToVietnamese(project.getStatus())); // Load trạng thái hiện tại (chuyển sang tiếng Việt)
             
             System.out.println("DEBUG: Đang load danh sách thành viên...");
             loadMembers();
@@ -115,7 +115,7 @@ public class ProjectDetailController {
         currentProject.setDescription(txtDesc.getText());
         currentProject.setStartDate(dpStart.getValue());
         currentProject.setEndDate(dpEnd.getValue());
-        currentProject.setStatus(cbStatus.getValue()); 
+        currentProject.setStatus(convertStatusToEnglish(cbStatus.getValue())); // Chuyển sang tiếng Anh trước khi gửi lên backend 
 
         try {
             if (currentProject.getId() == null) {
@@ -207,5 +207,35 @@ public class ProjectDetailController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+    
+    // Hàm chuyển đổi trạng thái từ tiếng Anh sang tiếng Việt
+    private String convertStatusToVietnamese(String englishStatus) {
+        if (englishStatus == null) return "ĐANG HOẠT ĐỘNG";
+        switch (englishStatus) {
+            case "ACTIVE":
+                return "ĐANG HOẠT ĐỘNG";
+            case "COMPLETED":
+                return "HOÀN THÀNH";
+            case "CLOSED":
+                return "ĐÃ ĐÓNG";
+            default:
+                return englishStatus;
+        }
+    }
+    
+    // Hàm chuyển đổi trạng thái từ tiếng Việt sang tiếng Anh
+    private String convertStatusToEnglish(String vietnameseStatus) {
+        if (vietnameseStatus == null) return "ACTIVE";
+        switch (vietnameseStatus) {
+            case "ĐANG HOẠT ĐỘNG":
+                return "ACTIVE";
+            case "HOÀN THÀNH":
+                return "COMPLETED";
+            case "ĐÃ ĐÓNG":
+                return "CLOSED";
+            default:
+                return vietnameseStatus;
+        }
     }
 }

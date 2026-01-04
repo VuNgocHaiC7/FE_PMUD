@@ -10,7 +10,7 @@
     
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 20 25; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
-        <Label text="⚙️  Cài Đặt Dự Án" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+        <Label text="Cài đặt dự án" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
     </HBox>
 
     <!-- TabPane with custom style -->

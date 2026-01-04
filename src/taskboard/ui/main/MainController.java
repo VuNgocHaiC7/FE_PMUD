@@ -151,6 +151,71 @@ public class MainController {
         System.out.println("Tạo mới task/project");
         // Mở dialog tạo mới
     }
+    
+    @FXML
+    void handleGuide(ActionEvent event) {
+        System.out.println("Mở hướng dẫn sử dụng");
+        
+        // Tạo dialog hướng dẫn
+        Alert guideAlert = new Alert(Alert.AlertType.INFORMATION);
+        guideAlert.setTitle("Hướng dẫn sử dụng TaskBoard");
+        guideAlert.setHeaderText("Chào mừng bạn đến với TaskBoard!");
+        
+        String guideContent = 
+            "📋 HƯỚNG DẪN SỬ DỤNG\n\n" +
+            "1. DASHBOARD / BÁO CÁO\n" +
+            "   • Xem tổng quan về dự án, task, và tiến độ công việc\n" +
+            "   • Theo dõi biểu đồ thống kê và phân tích\n\n" +
+            
+            "2. QUẢN LÝ NGƯỜI DÙNG (Chỉ Admin)\n" +
+            "   • Thêm, sửa, xóa người dùng\n" +
+            "   • Gán role: ADMIN hoặc MEMBER\n" +
+            "   • Khóa/Mở khóa tài khoản\n\n" +
+            
+            "3. QUẢN LÝ DỰ ÁN & THÀNH VIÊN\n" +
+            "   • Tạo dự án mới với thông tin chi tiết\n" +
+            "   • Thêm/Xóa thành viên vào dự án\n" +
+            "   • Cập nhật trạng thái: ĐANG HOẠT ĐỘNG, HOÀN THÀNH, ĐÃ ĐÓNG\n" +
+            "   • Tìm kiếm và lọc dự án theo trạng thái\n\n" +
+            
+            "4. BẢNG CÔNG VIỆC (KANBAN)\n" +
+            "   • Xem task theo dạng bảng Kanban\n" +
+            "   • Kéo thả task giữa các cột: TODO, IN PROGRESS, DONE\n" +
+            "   • Thêm, sửa, xóa task\n" +
+            "   • Gán task cho thành viên\n" +
+            "   • Thêm comment và theo dõi tiến độ\n\n" +
+            
+            "💡 MẸO:\n" +
+            "   • Nhấn vào biểu tượng 🔔 để xem thông báo\n" +
+            "   • Sử dụng chức năng tìm kiếm và lọc để tìm nhanh\n" +
+            "   • Kiểm tra Dashboard thường xuyên để nắm bắt tiến độ\n\n" +
+            
+            "📞 HỖ TRỢ:\n" +
+            "   • Liên hệ Admin nếu gặp vấn đề\n" +
+            "   • Kiểm tra quyền truy cập của bạn nếu không thấy một số chức năng";
+        
+        guideAlert.setContentText(guideContent);
+        
+        // Tăng kích thước dialog và cải thiện font chữ
+        guideAlert.getDialogPane().setPrefWidth(700);
+        guideAlert.getDialogPane().setPrefHeight(620);
+        
+        // Áp dụng font chữ đẹp cho nội dung
+        guideAlert.getDialogPane().setStyle(
+            "-fx-font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; " +
+            "-fx-font-size: 14px; " +
+            "-fx-line-spacing: 4px;"
+        );
+        
+        // Style cho header
+        guideAlert.getDialogPane().lookup(".header-panel").setStyle(
+            "-fx-font-family: 'Segoe UI Semibold', 'Arial', sans-serif; " +
+            "-fx-font-size: 16px; " +
+            "-fx-font-weight: 600;"
+        );
+        
+        guideAlert.showAndWait();
+    }
 
     @FXML
     void showConfig(ActionEvent event) {

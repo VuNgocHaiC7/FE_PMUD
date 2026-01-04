@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import taskboard.api.ProjectApi;
 import taskboard.api.TaskApi;
+import taskboard.auth.AuthContext;
 import taskboard.model.CommentDTO;
 import taskboard.model.TaskDTO;
 import taskboard.model.UserDTO;
@@ -30,11 +31,19 @@ public class TaskDialogController {
     @FXML private ComboBox<String> cbStatus;
     @FXML private ListView<UserDTO> lvAssignees; // Thay ComboBox bằng ListView
     
+    // VBox containers for hiding
+    @FXML private VBox vboxStatus;
+    @FXML private VBox vboxAssignees;
+    
     // COMMENT FIELDS
     @FXML private VBox vboxComments;
     @FXML private TextArea txtComment;
     @FXML private Button btnSendComment;
     @FXML private Label lblCommentCount;
+    
+    // BUTTONS
+    @FXML private Button btnSave;
+    @FXML private Button btnCancel;
 
     private TaskDTO currentTask;
     private Long projectId;
@@ -147,6 +156,38 @@ public class TaskDialogController {
                 }
             }
         });
+        
+        // Kiểm tra role và ẩn các control nếu user là MEMBER
+        setupRoleBasedVisibility();
+    }
+    
+    /**
+     * Ẩn các control dựa trên role của user
+     */
+    private void setupRoleBasedVisibility() {
+        AuthContext authContext = AuthContext.getInstance();
+        List<String> roles = authContext.getRoles();
+        boolean isMember = roles != null && roles.contains("MEMBER") && !roles.contains("ADMIN");
+        
+        if (isMember) {
+            // Ẩn VBox chứa ComboBox trạng thái
+            if (vboxStatus != null) {
+                vboxStatus.setVisible(false);
+                vboxStatus.setManaged(false);
+            }
+            
+            // Ẩn VBox chứa ListView giao cho
+            if (vboxAssignees != null) {
+                vboxAssignees.setVisible(false);
+                vboxAssignees.setManaged(false);
+            }
+            
+            // Ẩn nút Lưu Task
+            if (btnSave != null) {
+                btnSave.setVisible(false);
+                btnSave.setManaged(false);
+            }
+        }
     }
 
     /**

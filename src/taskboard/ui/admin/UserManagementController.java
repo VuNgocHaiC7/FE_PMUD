@@ -302,7 +302,60 @@ public class UserManagementController {
         });
     }
 
-    @FXML private void handleSearch() { loadData(); }
+    @FXML 
+    private void handleSearch() {
+        new Thread(() -> {
+            try {
+                System.out.println("=== BẮT ĐẦU TÌM KIẾM NGƯỜI DÙNG ===");
+                
+                // Lấy toàn bộ danh sách người dùng từ API
+                List<UserDTO> allUsers = UserApi.getAllUsers("");
+                
+                if (allUsers == null) {
+                    Platform.runLater(() -> {
+                        tableUsers.setItems(FXCollections.observableArrayList());
+                    });
+                    return;
+                }
+                
+                // Lấy giá trị tìm kiếm và filter
+                String searchText = txtSearch.getText() != null ? txtSearch.getText().toLowerCase().trim() : "";
+                String roleFilter = cbRoleFilter.getValue();
+                
+                System.out.println("Tìm kiếm với: text='" + searchText + "', role='" + roleFilter + "'");
+                
+                // Lọc danh sách
+                List<UserDTO> filteredList = allUsers.stream()
+                    .filter(user -> {
+                        // Lọc theo từ khóa tìm kiếm (username, fullName, email)
+                        boolean matchesSearch = searchText.isEmpty() || 
+                            (user.getUsername() != null && user.getUsername().toLowerCase().contains(searchText)) ||
+                            (user.getFullName() != null && user.getFullName().toLowerCase().contains(searchText)) ||
+                            (user.getEmail() != null && user.getEmail().toLowerCase().contains(searchText));
+                        
+                        // Lọc theo role
+                        boolean matchesRole = roleFilter.equals("Tất cả") ||
+                            (user.getRole() != null && user.getRole().equalsIgnoreCase(roleFilter));
+                        
+                        return matchesSearch && matchesRole;
+                    })
+                    .toList();
+                
+                System.out.println("Tìm thấy " + filteredList.size() + " người dùng phù hợp");
+                
+                // Hiển thị kết quả lên UI
+                Platform.runLater(() -> {
+                    tableUsers.setItems(FXCollections.observableArrayList(filteredList));
+                });
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                Platform.runLater(() -> {
+                    showAlert("Lỗi", "Không thể thực hiện tìm kiếm: " + e.getMessage());
+                });
+            }
+        }).start();
+    }
 
     // --- CHỨC NĂNG GÁN ROLE ---
     private void handleChangeRole(UserDTO selectedUser) {

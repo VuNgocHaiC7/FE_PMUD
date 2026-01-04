@@ -41,13 +41,13 @@
             </VBox>
 
             <HBox spacing="15">
-                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                <VBox fx:id="vboxStatus" spacing="8" HBox.hgrow="ALWAYS">
                     <Label text="Trạng thái" styleClass="field-label"/>
                     <ComboBox fx:id="cbStatus" promptText="Chọn trạng thái" 
                               maxWidth="Infinity" styleClass="form-combo"/>
                 </VBox>
 
-                <VBox spacing="8" HBox.hgrow="ALWAYS">
+                <VBox fx:id="vboxAssignees" spacing="8" HBox.hgrow="ALWAYS">
                     <Label text="Giao cho (Chọn nhiều)" styleClass="field-label"/>
                     <ListView fx:id="lvAssignees" prefHeight="120" styleClass="form-list"/>
                 </VBox>
@@ -86,8 +86,8 @@
     <Separator />
 
     <HBox spacing="15" alignment="CENTER_RIGHT" style="-fx-padding: 15 25; -fx-background-color: #f8f9fa;">
-        <Button text="✖ Hủy bỏ" onAction="#handleCancel" styleClass="button-secondary"/>
-        <Button text="💾 Lưu Task" onAction="#handleSave" styleClass="button-success"/>
+        <Button fx:id="btnCancel" text="✖ Hủy bỏ" onAction="#handleCancel" styleClass="button-secondary"/>
+        <Button fx:id="btnSave" text="💾 Lưu Task" onAction="#handleSave" styleClass="button-success"/>
     </HBox>
 
 </VBox>

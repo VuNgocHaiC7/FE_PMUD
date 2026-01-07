@@ -156,65 +156,137 @@ public class MainController {
     void handleGuide(ActionEvent event) {
         System.out.println("Mở hướng dẫn sử dụng");
         
-        // Tạo dialog hướng dẫn
+        // Tạo dialog hướng dẫn với style đẹp
         Alert guideAlert = new Alert(Alert.AlertType.INFORMATION);
         guideAlert.setTitle("Hướng dẫn sử dụng TaskBoard");
         guideAlert.setHeaderText("Chào mừng bạn đến với TaskBoard!");
         
-        String guideContent = 
-            "📋 HƯỚNG DẪN SỬ DỤNG\n\n" +
-            "1. DASHBOARD / BÁO CÁO\n" +
-            "   • Xem tổng quan về dự án, task, và tiến độ công việc\n" +
-            "   • Theo dõi biểu đồ thống kê và phân tích\n\n" +
-            
-            "2. QUẢN LÝ NGƯỜI DÙNG (Chỉ Admin)\n" +
-            "   • Thêm, sửa, xóa người dùng\n" +
-            "   • Gán role: ADMIN hoặc MEMBER\n" +
-            "   • Khóa/Mở khóa tài khoản\n\n" +
-            
-            "3. QUẢN LÝ DỰ ÁN & THÀNH VIÊN\n" +
-            "   • Tạo dự án mới với thông tin chi tiết\n" +
-            "   • Thêm/Xóa thành viên vào dự án\n" +
-            "   • Cập nhật trạng thái: ĐANG HOẠT ĐỘNG, HOÀN THÀNH, ĐÃ ĐÓNG\n" +
-            "   • Tìm kiếm và lọc dự án theo trạng thái\n\n" +
-            
-            "4. BẢNG CÔNG VIỆC (KANBAN)\n" +
-            "   • Xem task theo dạng bảng Kanban\n" +
-            "   • Kéo thả task giữa các cột: TODO, IN PROGRESS, DONE\n" +
-            "   • Thêm, sửa, xóa task\n" +
-            "   • Gán task cho thành viên\n" +
-            "   • Thêm comment và theo dõi tiến độ\n\n" +
-            
-            "💡 MẸO:\n" +
-            "   • Nhấn vào biểu tượng 🔔 để xem thông báo\n" +
-            "   • Sử dụng chức năng tìm kiếm và lọc để tìm nhanh\n" +
-            "   • Kiểm tra Dashboard thường xuyên để nắm bắt tiến độ\n\n" +
-            
-            "📞 HỖ TRỢ:\n" +
-            "   • Liên hệ Admin nếu gặp vấn đề\n" +
-            "   • Kiểm tra quyền truy cập của bạn nếu không thấy một số chức năng";
+        // Tạo ScrollPane để chứa nội dung có thể cuộn
+        javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane();
+        scrollPane.setFitToWidth(true);
+        scrollPane.setStyle("-fx-background: white; -fx-border-color: transparent;");
         
-        guideAlert.setContentText(guideContent);
+        // Tạo VBox chứa nội dung
+        javafx.scene.layout.VBox contentBox = new javafx.scene.layout.VBox(15);
+        contentBox.setStyle("-fx-padding: 20; -fx-background-color: white;");
         
-        // Tăng kích thước dialog và cải thiện font chữ
-        guideAlert.getDialogPane().setPrefWidth(700);
-        guideAlert.getDialogPane().setPrefHeight(620);
+        // Các section
+        contentBox.getChildren().addAll(
+            createGuideSection("📊 1. DASHBOARD / BÁO CÁO",
+                "• Xem tổng quan về dự án, task, và tiến độ công việc\n" +
+                "• Theo dõi biểu đồ thống kê và phân tích"),
+            
+            createGuideSection("👥 2. QUẢN LÝ NGƯỜI DÙNG (Chỉ Admin)",
+                "• Thêm, sửa, xóa người dùng\n" +
+                "• Gán role: ADMIN hoặc MEMBER\n" +
+                "• Khóa/Mở khóa tài khoản"),
+            
+            createGuideSection("📁 3. QUẢN LÝ DỰ ÁN & THÀNH VIÊN",
+                "• Tạo dự án mới với thông tin chi tiết\n" +
+                "• Thêm/Xóa thành viên vào dự án\n" +
+                "• Cập nhật trạng thái: ĐANG HOẠT ĐỘNG, HOÀN THÀNH, ĐÃ ĐÓNG\n" +
+                "• Tìm kiếm và lọc dự án theo trạng thái"),
+            
+            createGuideSection("📋 4. BẢNG CÔNG VIỆC",
+                "• Xem task theo dạng bảng Kanban\n" +
+                "• Kéo thả task giữa các cột: CẦN LÀM, ĐANG LÀM, HOÀN THÀNH\n" +
+                "• Thêm, sửa, xóa task\n" +
+                "• Gán task cho thành viên\n" +
+                "• Thêm comment và theo dõi tiến độ"),
+            
+            createGuideTipSection("💡 MẸO",
+                "• Nhấn vào biểu tượng 🔔 để xem thông báo\n" +
+                "• Sử dụng chức năng tìm kiếm và lọc để tìm nhanh\n" +
+                "• Kiểm tra Dashboard thường xuyên để nắm bắt tiến độ")
+        );
         
-        // Áp dụng font chữ đẹp cho nội dung
+        scrollPane.setContent(contentBox);
+        
+        // Set dialog pane
+        guideAlert.getDialogPane().setContent(scrollPane);
+        guideAlert.getDialogPane().setPrefWidth(750);
+        guideAlert.getDialogPane().setPrefHeight(650);
+        
+        // Style cho dialog
         guideAlert.getDialogPane().setStyle(
-            "-fx-font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; " +
-            "-fx-font-size: 14px; " +
-            "-fx-line-spacing: 4px;"
+            "-fx-background-color: white; " +
+            "-fx-font-family: 'Segoe UI', 'Roboto', sans-serif;"
         );
         
         // Style cho header
-        guideAlert.getDialogPane().lookup(".header-panel").setStyle(
-            "-fx-font-family: 'Segoe UI Semibold', 'Arial', sans-serif; " +
-            "-fx-font-size: 16px; " +
-            "-fx-font-weight: 600;"
-        );
+        if (guideAlert.getDialogPane().lookup(".header-panel") != null) {
+            guideAlert.getDialogPane().lookup(".header-panel").setStyle(
+                "-fx-background-color: linear-gradient(to right, #667eea 0%, #764ba2 100%); " +
+                "-fx-text-fill: white; " +
+                "-fx-font-size: 18px; " +
+                "-fx-font-weight: bold; " +
+                "-fx-padding: 20;"
+            );
+        }
         
         guideAlert.showAndWait();
+    }
+    
+    // Helper method để tạo section hướng dẫn
+    private javafx.scene.layout.VBox createGuideSection(String title, String content) {
+        javafx.scene.layout.VBox section = new javafx.scene.layout.VBox(8);
+        section.setStyle(
+            "-fx-background-color: #f8f9fa; " +
+            "-fx-padding: 15; " +
+            "-fx-background-radius: 8; " +
+            "-fx-border-color: #e0e0e0; " +
+            "-fx-border-width: 1; " +
+            "-fx-border-radius: 8;"
+        );
+        
+        javafx.scene.control.Label titleLabel = new javafx.scene.control.Label(title);
+        titleLabel.setStyle(
+            "-fx-font-size: 15px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #2c3e50;"
+        );
+        
+        javafx.scene.control.Label contentLabel = new javafx.scene.control.Label(content);
+        contentLabel.setWrapText(true);
+        contentLabel.setStyle(
+            "-fx-font-size: 13px; " +
+            "-fx-text-fill: #555; " +
+            "-fx-line-spacing: 3;"
+        );
+        
+        section.getChildren().addAll(titleLabel, contentLabel);
+        return section;
+    }
+    
+    // Helper method để tạo tip section (có màu khác)
+    private javafx.scene.layout.VBox createGuideTipSection(String title, String content) {
+        javafx.scene.layout.VBox section = new javafx.scene.layout.VBox(8);
+        section.setStyle(
+            "-fx-background-color: #fff9e6; " +
+            "-fx-padding: 15; " +
+            "-fx-background-radius: 8; " +
+            "-fx-border-color: #ffd966; " +
+            "-fx-border-width: 2; " +
+            "-fx-border-radius: 8;"
+        );
+        
+        javafx.scene.control.Label titleLabel = new javafx.scene.control.Label(title);
+        titleLabel.setStyle(
+            "-fx-font-size: 15px; " +
+            "-fx-font-weight: bold; " +
+            "-fx-text-fill: #d4a100;"
+        );
+        
+        javafx.scene.control.Label contentLabel = new javafx.scene.control.Label(content);
+        contentLabel.setWrapText(true);
+        contentLabel.setStyle(
+            "-fx-font-size: 13px; " +
+            "-fx-text-fill: #666; " +
+            "-fx-line-spacing: 3;"
+        );
+        
+        section.getChildren().addAll(titleLabel, contentLabel);
+        return section;
     }
 
     @FXML

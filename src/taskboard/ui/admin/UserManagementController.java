@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import taskboard.api.UserApi;
 import taskboard.auth.AuthContext;
 import taskboard.model.UserDTO;
@@ -18,7 +19,10 @@ public class UserManagementController {
 
     @FXML private TextField txtSearch;
     @FXML private Button btnCreateUser;
+    @FXML private Button btnSearch;
     @FXML private TableView<UserDTO> tableUsers;
+    @FXML private VBox vboxMemberMessage;
+    @FXML private HBox hboxSearchControls;
     
     @FXML private TableColumn<UserDTO, Number> colId;
     @FXML private TableColumn<UserDTO, String> colUsername;
@@ -37,6 +41,12 @@ public class UserManagementController {
     public void initialize() {
         // Kiểm tra role của user hiện tại
         checkUserRole();
+        
+        // Nếu là member, hiển thị thông báo và ẩn bảng
+        if (!isAdmin) {
+            showMemberMessage();
+            return;
+        }
         
         setupFilterCombo();
         setupColumns();
@@ -66,6 +76,26 @@ public class UserManagementController {
         if (btnCreateUser != null) {
             btnCreateUser.setVisible(isAdmin);
             btnCreateUser.setManaged(isAdmin);
+        }
+    }
+    
+    private void showMemberMessage() {
+        // Hiển thị thông báo cho member
+        if (vboxMemberMessage != null) {
+            vboxMemberMessage.setVisible(true);
+            vboxMemberMessage.setManaged(true);
+        }
+        
+        // Ẩn bảng người dùng
+        if (tableUsers != null) {
+            tableUsers.setVisible(false);
+            tableUsers.setManaged(false);
+        }
+        
+        // Ẩn toàn bộ HBox chứa search controls
+        if (hboxSearchControls != null) {
+            hboxSearchControls.setVisible(false);
+            hboxSearchControls.setManaged(false);
         }
     }
 

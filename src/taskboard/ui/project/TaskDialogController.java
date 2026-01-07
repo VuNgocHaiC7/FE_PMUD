@@ -69,8 +69,6 @@ public class TaskDialogController {
             case "DONE":
             case "Done":
                 return "HOÀN THÀNH";
-            case "BLOCKED":
-                return "BỊ CHẶN";
             default:
                 return "CẦN LÀM";
         }
@@ -88,8 +86,6 @@ public class TaskDialogController {
                 return "IN_PROGRESS";
             case "HOÀN THÀNH":
                 return "DONE";
-            case "BỊ CHẶN":
-                return "BLOCKED";
             default:
                 return "TODO";
         }
@@ -98,7 +94,7 @@ public class TaskDialogController {
     @FXML
     public void initialize() {
         // Khởi tạo danh sách trạng thái
-        cbStatus.setItems(FXCollections.observableArrayList("CẦN LÀM", "ĐANG LÀM", "HOÀN THÀNH", "BỊ CHẶN"));
+        cbStatus.setItems(FXCollections.observableArrayList("CẦN LÀM", "ĐANG LÀM", "HOÀN THÀNH"));
         cbStatus.getSelectionModel().select("CẦN LÀM"); // Mặc định là CẦN LÀM
 
         // --- BẮT ĐẦU PHẦN SỬA LISTVIEW ---

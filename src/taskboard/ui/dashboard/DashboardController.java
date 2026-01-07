@@ -193,8 +193,6 @@ public class DashboardController {
             case "DONE":
             case "COMPLETED":
                 return "Hoàn thành";
-            case "BLOCKED":
-                return "Bị chặn";
             default:
                 return status;
         }

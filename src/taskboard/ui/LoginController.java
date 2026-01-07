@@ -38,18 +38,18 @@ public class LoginController {
 
     @FXML
     public void handleLogin(ActionEvent event) {
-        String username = usernameField.getText().trim();
+        String usernameOrEmail = usernameField.getText().trim();
         String password = passwordField.getText();
 
         // 1. Validate đầu vào
-        if (username.isEmpty() || password.isEmpty()) {
+        if (usernameOrEmail.isEmpty() || password.isEmpty()) {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin!", AlertType.WARNING);
             return;
         }
 
         try {
-            // 2. GỌI API: POST /api/auth/login
-            LoginResponse response = AuthApi.login(username, password);
+            // 2. GỌI API: POST /api/auth/login (hỗ trợ cả username và email)
+            LoginResponse response = AuthApi.login(usernameOrEmail, password);
 
             // 3. XỬ LÝ THÀNH CÔNG:
             // - Lưu Token và FullName vào biến toàn cục (Session)

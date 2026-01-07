@@ -7,15 +7,15 @@ public class AuthApi {
     // >>> QUAN TRỌNG: ĐỔI THÀNH FALSE ĐỂ GỌI SERVER THẬT <<<
     private static final boolean IS_MOCK = false; // Đổi thành true để test không cần server
 
-    // 1. Hàm Đăng Nhập (Login)
-    public static LoginResponse login(String username, String password) throws Exception {
+    // 1. Hàm Đăng Nhập (Login) - Hỗ trợ cả Username và Email
+    public static LoginResponse login(String usernameOrEmail, String password) throws Exception {
         if (IS_MOCK) {
             // Mock mode: Chấp nhận bất kỳ username/password nào
-            System.out.println("MOCK MODE: Đăng nhập với username: " + username);
+            System.out.println("MOCK MODE: Đăng nhập với username/email: " + usernameOrEmail);
             LoginResponse res = new LoginResponse();
-            res.token = "mock-token-" + username;
+            res.token = "mock-token-" + usernameOrEmail;
             res.userId = 1L;
-            res.fullName = "User Mock - " + username;
+            res.fullName = "User Mock - " + usernameOrEmail;
             res.roles = java.util.Arrays.asList("ADMIN"); // Hoặc "MEMBER"
             
             // Lưu vào context
@@ -27,7 +27,8 @@ public class AuthApi {
             return res;
         } else {
             // --- LOGIC REAL (GỌI SERVER) ---
-            String jsonBody = String.format("{\"username\": \"%s\", \"password\": \"%s\"}", username, password);
+            // Gửi giá trị vào field username, backend sẽ tự check xem đó là username hay email
+            String jsonBody = String.format("{\"username\": \"%s\", \"password\": \"%s\"}", usernameOrEmail, password);
             
             // Gọi API
             System.out.println("Đang gọi Login tới: " + jsonBody);
@@ -84,12 +85,22 @@ public class AuthApi {
                     System.out.println("✓ Đã parse full_name: " + fullNamePart);
                 }
             } else {
-                res.fullName = username;
-                System.out.println("⚠ Không tìm thấy fullName, dùng username: " + username);
+                res.fullName = usernameOrEmail;
+                System.out.println("⚠ Không tìm thấy fullName, dùng usernameOrEmail: " + usernameOrEmail);
             }
             
-            // 3.5 Lưu username
-            res.username = username;
+            // 3.5 Lưu username (có thể là email nếu user dùng email để login)
+            if (responseJson.contains("\"username\"")) {
+                String[] usernameParts = responseJson.split("\"username\":");
+                if (usernameParts.length > 1) {
+                    String usernamePart = usernameParts[1].split("\"")[1];
+                    res.username = usernamePart;
+                    AuthContext.getInstance().setUsername(usernamePart);
+                }
+            } else {
+                res.username = usernameOrEmail;
+                AuthContext.getInstance().setUsername(usernameOrEmail);
+            }
             
             // 4. Lấy roles
             if (responseJson.contains("\"role\"")) {

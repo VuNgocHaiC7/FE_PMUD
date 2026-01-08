@@ -10,7 +10,7 @@
     
     <!-- Header -->
     <HBox alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 20 25; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1 0;">
-        <Label text="Cài đặt dự án" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
+        <Label text="Chỉnh Sửa Dự Án" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2d3748;"/>
     </HBox>
 
     <!-- TabPane with custom style -->
@@ -18,37 +18,45 @@
         <!-- Tab Thông tin chung -->
         <Tab text="📋  Thông tin chung" closable="false">
             <VBox spacing="20" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 12; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 8, 0, 0, 2);">
-                <GridPane hgap="20" vgap="18">
-                    <columnConstraints>
-                        <ColumnConstraints minWidth="120" prefWidth="120" maxWidth="150"/>
-                        <ColumnConstraints hgrow="ALWAYS" minWidth="300" prefWidth="450"/>
-                    </columnConstraints>
-                    
-                    <Label text="Tên dự án:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
-                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
-                    <TextField fx:id="txtName" GridPane.rowIndex="0" GridPane.columnIndex="1"
-                               style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15; -fx-font-size: 14px;"/>
+                <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+                    <GridPane hgap="20" vgap="18">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="120" maxWidth="150"/>
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="300" prefWidth="450"/>
+                        </columnConstraints>
+                        
+                        <Label text="Tên dự án:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+                               style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
+                        <TextField fx:id="txtName" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                                   style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15; -fx-font-size: 14px;"/>
 
-                    <Label text="Mô tả:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
-                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
-                    <TextArea fx:id="txtDesc" prefRowCount="4" GridPane.rowIndex="1" GridPane.columnIndex="1"
-                              style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 15; -fx-font-size: 14px;"/>
+                        <Label text="Mã dự án:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+                               style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
+                        <TextField fx:id="txtProjectCode" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                                   promptText="Ví dụ: PRJ001, TASK2026..."
+                                   style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 10 15; -fx-font-size: 14px;"/>
 
-                    <Label text="Trạng thái:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
-                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
-                    <ComboBox fx:id="cbStatus" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="200"
-                              style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8;"/>
+                        <Label text="Mô tả:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+                               style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
+                        <TextArea fx:id="txtDesc" prefRowCount="3" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                                  style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 12 15; -fx-font-size: 14px;"/>
 
-                    <Label text="Ngày bắt đầu:" GridPane.rowIndex="3" GridPane.columnIndex="0" 
-                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
-                    <DatePicker fx:id="dpStart" GridPane.rowIndex="3" GridPane.columnIndex="1"
-                                style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8;"/>
+                        <Label fx:id="lblStatus" text="Trạng thái:" GridPane.rowIndex="3" GridPane.columnIndex="0" 
+                               style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
+                        <ComboBox fx:id="cbStatus" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="200"
+                                  style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8; -fx-background-radius: 8;"/>
 
-                    <Label text="Ngày kết thúc:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
-                           style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
-                    <DatePicker fx:id="dpEnd" GridPane.rowIndex="4" GridPane.columnIndex="1"
-                                style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8;"/>
-                </GridPane>
+                        <Label text="Ngày bắt đầu:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
+                               style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
+                        <DatePicker fx:id="dpStart" GridPane.rowIndex="4" GridPane.columnIndex="1"
+                                    style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8;"/>
+
+                        <Label text="Ngày kết thúc:" GridPane.rowIndex="5" GridPane.columnIndex="0" 
+                               style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #4a5568;" wrapText="true"/>
+                        <DatePicker fx:id="dpEnd" GridPane.rowIndex="5" GridPane.columnIndex="1"
+                                    style="-fx-background-color: #f7fafc; -fx-border-color: #cbd5e0; -fx-border-radius: 8;"/>
+                    </GridPane>
+                </ScrollPane>
 
                 <Separator style="-fx-background-color: #e2e8f0;"/>
 

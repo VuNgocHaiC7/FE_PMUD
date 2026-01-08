@@ -42,6 +42,9 @@ public class MainController {
     @FXML
     private Label lblNotificationBadge;
     
+    @FXML
+    private Button btnUserManagement;
+    
     // Notification polling
     private Timer notificationTimer;
     private long lastNotificationCount = 0;
@@ -100,6 +103,8 @@ public class MainController {
     @FXML
     void showUserManagement(ActionEvent event) {
         System.out.println("Chuyển sang Quản lý người dùng");
+        
+        // Luôn load view, UserManagementController sẽ xử lý hiển thị thông báo cho member
         setActiveButton(event);
         loadView("/taskboard/ui/admin/UserManagementView.fxml");
     }

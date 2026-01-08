@@ -198,10 +198,26 @@ public class ProjectListController {
 
     @FXML
     private void handleNewProject() {
-        // Nhấn "New Project" -> Nhập tên, mô tả -> Nhấn Save
-        // GỌI API: POST /api/projects
-        // XỬ LÝ: Thêm dự án mới vào danh sách đang hiển thị
-        openProjectDetail(null); // Tạo mới thì vẫn dùng form Detail
+        // Mở dialog tạo dự án mới (riêng biệt với dialog sửa)
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/project/ProjectCreateView.fxml"));
+            Parent root = loader.load();
+            ProjectCreateController controller = loader.getController();
+            
+            Stage dialog = new Stage();
+            dialog.setTitle("Tạo Dự Án Mới");
+            dialog.setScene(new Scene(root));
+            dialog.initModality(Modality.APPLICATION_MODAL);
+            dialog.showAndWait();
+            
+            // Nếu tạo thành công, reload danh sách
+            if (controller.isCreated()) {
+                loadData();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Lỗi", "Không thể mở form tạo dự án: " + e.getMessage());
+        }
     }
 
     private void handleDeleteProject(ProjectDTO project) {

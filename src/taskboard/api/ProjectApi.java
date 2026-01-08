@@ -87,8 +87,9 @@ public class ProjectApi {
             String endDateTime = project.getEndDate() != null ? project.getEndDate() + "T00:00:00" : null;
             
             String jsonBody = String.format(
-                "{\"name\": \"%s\", \"description\": \"%s\", \"startDate\": \"%s\", \"endDate\": \"%s\", \"status\": \"%s\"}",
+                "{\"name\": \"%s\", \"projectCode\": \"%s\", \"description\": \"%s\", \"startDate\": \"%s\", \"endDate\": \"%s\", \"status\": \"%s\"}",
                 project.getName(),
+                project.getProjectCode(),
                 project.getDescription(),
                 startDateTime,
                 endDateTime,
@@ -117,8 +118,9 @@ public class ProjectApi {
             String endDateTime = project.getEndDate() != null ? project.getEndDate() + "T00:00:00" : null;
             
             String jsonBody = String.format(
-                "{\"name\": \"%s\", \"description\": \"%s\", \"startDate\": \"%s\", \"endDate\": \"%s\", \"status\": \"%s\"}",
+                "{\"name\": \"%s\", \"projectCode\": \"%s\", \"description\": \"%s\", \"startDate\": \"%s\", \"endDate\": \"%s\", \"status\": \"%s\"}",
                 project.getName(),
+                project.getProjectCode(),
                 project.getDescription(),
                 startDateTime,
                 endDateTime,
@@ -222,6 +224,7 @@ public class ProjectApi {
             ProjectDTO project = new ProjectDTO();
             project.setId(obj.getLong("id"));
             project.setName(obj.getString("name"));
+            project.setProjectCode(obj.optString("projectCode", "")); // Đọc mã dự án
             project.setDescription(obj.optString("description", ""));
             
             // Parse dates - có thể là LocalDateTime hoặc LocalDate

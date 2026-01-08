@@ -13,9 +13,11 @@ import java.util.Optional;
 
 public class ProjectDetailController {
     @FXML private TextField txtName;
+    @FXML private TextField txtProjectCode;
     @FXML private TextArea txtDesc;
     @FXML private DatePicker dpStart, dpEnd;
     @FXML private ComboBox<String> cbStatus;
+    @FXML private Label lblStatus;
     
     @FXML private Tab tabMembers;
     @FXML private ComboBox<UserDTO> cbAllUsers;
@@ -84,15 +86,36 @@ public class ProjectDetailController {
         if (project == null) {
             // --- MODE TẠO MỚI ---
             tabMembers.setDisable(true); // Tạo xong mới được thêm thành viên
-            cbStatus.getSelectionModel().select("ĐANG HOẠT ĐỘNG"); // Default status
+            
+            // Ẩn trường Trạng thái khi tạo mới
+            if (lblStatus != null) {
+                lblStatus.setVisible(false);
+                lblStatus.setManaged(false);
+            }
+            if (cbStatus != null) {
+                cbStatus.setVisible(false);
+                cbStatus.setManaged(false);
+                cbStatus.getSelectionModel().select("ĐANG HOẠT ĐỘNG"); // Default status (ẩn nhưng vẫn set giá trị)
+            }
         } else {
-            // --- MODE SỬA (EDIT) / ĐÓNG ---
+            // --- MODE SỬA (EDIT) ---
             System.out.println("DEBUG: Đang load thông tin project vào form...");
             txtName.setText(project.getName());
+            txtProjectCode.setText(project.getProjectCode());
             txtDesc.setText(project.getDescription());
             dpStart.setValue(project.getStartDate());
             dpEnd.setValue(project.getEndDate());
-            cbStatus.setValue(convertStatusToVietnamese(project.getStatus())); // Load trạng thái hiện tại (chuyển sang tiếng Việt)
+            
+            // Hiển thị trường Trạng thái khi sửa
+            if (lblStatus != null) {
+                lblStatus.setVisible(true);
+                lblStatus.setManaged(true);
+            }
+            if (cbStatus != null) {
+                cbStatus.setVisible(true);
+                cbStatus.setManaged(true);
+                cbStatus.setValue(convertStatusToVietnamese(project.getStatus())); // Load trạng thái hiện tại
+            }
             
             System.out.println("DEBUG: Đang load danh sách thành viên...");
             loadMembers();
@@ -104,18 +127,31 @@ public class ProjectDetailController {
     private void handleSave() {
         // Logic này xử lý cả TẠO MỚI (Create) và SỬA (Update)
         
-        if (txtName.getText().isEmpty() || cbStatus.getValue() == null) {
-            showAlert("Lỗi", "Vui lòng nhập tên và trạng thái!");
+        // Validate
+        if (txtName.getText().isEmpty()) {
+            showAlert("Lỗi", "Vui lòng nhập tên dự án!");
+            return;
+        }
+        
+        if (txtProjectCode.getText().isEmpty()) {
+            showAlert("Lỗi", "Vui lòng nhập mã dự án!");
             return;
         }
 
         if (currentProject == null) currentProject = new ProjectDTO();
         
         currentProject.setName(txtName.getText());
+        currentProject.setProjectCode(txtProjectCode.getText());
         currentProject.setDescription(txtDesc.getText());
         currentProject.setStartDate(dpStart.getValue());
         currentProject.setEndDate(dpEnd.getValue());
-        currentProject.setStatus(convertStatusToEnglish(cbStatus.getValue())); // Chuyển sang tiếng Anh trước khi gửi lên backend 
+        
+        // Nếu đang ở chế độ tạo mới (cbStatus ẩn), set mặc định là ACTIVE
+        if (cbStatus.isVisible()) {
+            currentProject.setStatus(convertStatusToEnglish(cbStatus.getValue()));
+        } else {
+            currentProject.setStatus("ACTIVE"); // Mặc định ĐANG HOẠT ĐỘNG khi tạo mới
+        } 
 
         try {
             if (currentProject.getId() == null) {

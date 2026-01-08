@@ -18,7 +18,6 @@ import javafx.beans.property.SimpleObjectProperty;
 public class UserManagementController {
 
     @FXML private TextField txtSearch;
-    @FXML private Button btnCreateUser;
     @FXML private Button btnSearch;
     @FXML private TableView<UserDTO> tableUsers;
     @FXML private VBox vboxMemberMessage;
@@ -71,12 +70,6 @@ public class UserManagementController {
     private void checkUserRole() {
         List<String> roles = AuthContext.getInstance().getRoles();
         isAdmin = roles != null && roles.contains("ADMIN");
-        
-        // Ẩn nút Create User nếu không phải admin
-        if (btnCreateUser != null) {
-            btnCreateUser.setVisible(isAdmin);
-            btnCreateUser.setManaged(isAdmin);
-        }
     }
     
     private void showMemberMessage() {
@@ -172,33 +165,6 @@ public class UserManagementController {
                 });
             }
         }).start();
-    }
-
-    // --- CHỨC NĂNG THÊM USER MỚI ---
-    @FXML
-    private void handleCreateUser() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/taskboard/ui/admin/UserDialogView.fxml"));
-            DialogPane dialogPane = loader.load();
-            UserDialogController dialogController = loader.getController();
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Thêm Người Dùng Mới");
-            Optional<ButtonType> clickedButton = dialog.showAndWait();
-            if (clickedButton.isPresent() && clickedButton.get() == ButtonType.OK) {
-                UserDTO newUser = dialogController.getNewUser();
-                
-                // GỌI API: POST /api/users
-                UserApi.createUser(newUser);
-                
-                // XỬ LÝ: Tắt popup, reload danh sách để thấy user mới
-                loadData();
-                showAlert("Thành công", "Tạo người dùng thành công!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Lỗi", "Không thể mở hộp thoại: " + e.getMessage());
-        }
     }
 
     private void addActionsColumn() {

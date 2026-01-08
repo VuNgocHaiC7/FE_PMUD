@@ -37,9 +37,6 @@
                 <Button text="Tìm kiếm" onAction="#handleSearch" prefHeight="38"
                         styleClass="search-btn"/>
                 <Region HBox.hgrow="ALWAYS"/>
-                <Button text="+ Tạo Người Dùng" fx:id="btnCreateUser" prefHeight="38"
-                        onAction="#handleCreateUser"
-                        styleClass="btn-create"/>
             </HBox>
         </VBox>
     </top>

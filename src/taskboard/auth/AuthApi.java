@@ -102,22 +102,30 @@ public class AuthApi {
                 AuthContext.getInstance().setUsername(usernameOrEmail);
             }
             
-            // 4. Lấy roles
+            // 4. Lấy roles (backend trả về "role" singular)
             if (responseJson.contains("\"role\"")) {
                 String[] parts4 = responseJson.split("\"role\":");
                 if (parts4.length > 1) {
                     String rolePart = parts4[1].split("\"")[1];
                     res.roles = java.util.Arrays.asList(rolePart);
                     AuthContext.getInstance().setRoles(res.roles);
+                    System.out.println("✓ Đã parse role: " + rolePart);
                 }
             } else {
                 res.roles = java.util.Arrays.asList("MEMBER");
+                AuthContext.getInstance().setRoles(res.roles);
+                System.out.println("⚠ Không tìm thấy role, mặc định MEMBER");
             }
             
-            System.out.println("Final username: " + res.username);
-            System.out.println("Final fullName: " + res.fullName);
-            System.out.println("Final userId: " + res.userId);
-            System.out.println("Final roles: " + res.roles);
+            // Lưu fullName vào AuthContext (quan trọng!)
+            AuthContext.getInstance().setFullName(res.fullName);
+            
+            System.out.println("===== THÔNG TIN ĐĂNG NHẬP =====");
+            System.out.println("Username: " + res.username);
+            System.out.println("Full Name: " + res.fullName);
+            System.out.println("User ID: " + res.userId);
+            System.out.println("Roles: " + res.roles);
+            System.out.println("================================");
             return res; 
         }
     }

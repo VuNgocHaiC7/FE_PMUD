@@ -161,7 +161,7 @@ public class MainController {
     void handleGuide(ActionEvent event) {
         System.out.println("Mở hướng dẫn sử dụng");
         
-        // Tạo dialog hướng dẫn với style đẹp
+        // Tạo dialog hướng dẫn với style
         Alert guideAlert = new Alert(Alert.AlertType.INFORMATION);
         guideAlert.setTitle("Hướng dẫn sử dụng TaskBoard");
         guideAlert.setHeaderText("Chào mừng bạn đến với TaskBoard!");

@@ -29,7 +29,7 @@ public class TaskDialogController {
     @FXML private TextField txtTitle;
     @FXML private TextArea txtDescription;
     @FXML private ComboBox<String> cbStatus;
-    @FXML private ListView<UserDTO> lvAssignees; // Thay ComboBox bằng ListView
+    @FXML private ListView<UserDTO> lvAssignees; // Thay ListView
     
     // VBox containers for hiding
     @FXML private VBox vboxStatus;
@@ -55,7 +55,7 @@ public class TaskDialogController {
     private Set<Long> existingCommentIds = new HashSet<>();
 
     /**
-     * Chuyển đổi status từ tiếng Anh (API) sang tiếng Việt (UI)
+     * Chuyển đổi status từ tiếng Anh tiếng Việt
      */
     private String statusToVietnamese(String englishStatus) {
         if (englishStatus == null) return "CẦN LÀM";
@@ -75,7 +75,7 @@ public class TaskDialogController {
     }
     
     /**
-     * Chuyển đổi status từ tiếng Việt (UI) sang tiếng Anh (API)
+     * Chuyển đổi status từ tiếng Việt sang tiếng Anh 
      */
     private String statusToEnglish(String vietnameseStatus) {
         if (vietnameseStatus == null) return "TODO";
@@ -96,8 +96,6 @@ public class TaskDialogController {
         // Khởi tạo danh sách trạng thái
         cbStatus.setItems(FXCollections.observableArrayList("CẦN LÀM", "ĐANG LÀM", "HOÀN THÀNH"));
         cbStatus.getSelectionModel().select("CẦN LÀM"); // Mặc định là CẦN LÀM
-
-        // --- BẮT ĐẦU PHẦN SỬA LISTVIEW ---
         
         // 1. Cấu hình cho phép chọn nhiều
         lvAssignees.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -263,8 +261,7 @@ public class TaskDialogController {
         currentTask.setDescription(txtDescription.getText() != null ? txtDescription.getText().trim() : "");
         currentTask.setStatus(statusToEnglish(cbStatus.getValue()));
         
-        // Lấy TOÀN BỘ danh sách người được chọn trong ListView (không phải getSelectedItems)
-        // getSelectedItems() chỉ trả về items đang được highlight, không phải tất cả
+        // Lấy TOÀN BỘ danh sách người được chọn trong ListView
         List<UserDTO> selectedUsers = new ArrayList<>(lvAssignees.getSelectionModel().getSelectedItems());
         
         System.out.println("=== SAVE TASK DEBUG ===");
@@ -284,7 +281,7 @@ public class TaskDialogController {
             currentTask.setAssigneeIds(assigneeIds);
             currentTask.setAssigneeNames(assigneeNames);
             
-            // Để tương thích với code cũ, set assignee đầu tiên
+            // Để tương thích với code set assignee đầu tiên
             currentTask.setAssignee(assigneeNames.get(0));
             currentTask.setAssigneeId(assigneeIds.get(0));
             
@@ -546,7 +543,7 @@ public class TaskDialogController {
                 for (CommentDTO newComment : newComments) {
                     VBox commentBox = createCommentBox(newComment, true); // isNew = true
                     vboxComments.getChildren().add(commentBox);
-                    System.out.println("🔔 Comment mới từ " + newComment.getUsername() + ": " + newComment.getContent());
+                    System.out.println("Comment mới từ " + newComment.getUsername() + ": " + newComment.getContent());
                 }
                 
                 updateCommentCount(existingCommentIds.size());

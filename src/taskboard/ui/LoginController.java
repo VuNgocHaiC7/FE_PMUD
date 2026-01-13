@@ -29,7 +29,7 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        // Binding hình nền cho đẹp, responsive theo cửa sổ
+        // Binding hình nền,  theo cửa sổ
         if (bgImage != null && rootPane != null) {
             bgImage.fitWidthProperty().bind(rootPane.widthProperty());
             bgImage.fitHeightProperty().bind(rootPane.heightProperty());
@@ -91,7 +91,7 @@ public class LoginController {
             newStage.setScene(new Scene(mainRoot));
             newStage.setTitle("TaskBoard - Hệ thống quản lý công việc");
             
-            // Mở lên là full màn hình luôn
+            // Mở lên là full màn hình
             newStage.setMaximized(true);
             newStage.show();
             System.out.println(">>> Hiển thị MainView thành công!");

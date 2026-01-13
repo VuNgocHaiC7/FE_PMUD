@@ -31,7 +31,7 @@ public class SignUpController {
 
     @FXML
     public void initialize() {
-        // Làm ảnh nền co giãn theo cửa sổ
+        //Ảnh nền co giãn theo cửa sổ
         if (bgImage != null && rootPane != null) {
             bgImage.fitWidthProperty().bind(rootPane.widthProperty());
             bgImage.fitHeightProperty().bind(rootPane.heightProperty());

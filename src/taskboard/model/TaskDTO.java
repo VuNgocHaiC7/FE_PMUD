@@ -59,7 +59,7 @@ public class TaskDTO {
     public Long getAssigneeId() { return assigneeId.get(); }
     public Long getProjectId() { return projectId.get(); }
     
-    // Getters mới cho danh sách nhiều assignees
+    // Getters cho danh sách nhiều assignees
     public List<Long> getAssigneeIds() { return assigneeIds; }
     public List<String> getAssigneeNames() { return assigneeNames; }
 

@@ -4,10 +4,10 @@ import taskboard.api.ApiClient;
 
 public class AuthApi {
 
-    // >>> QUAN TRỌNG: ĐỔI THÀNH FALSE ĐỂ GỌI SERVER THẬT <<<
+    // ĐỔI THÀNH FALSE ĐỂ GỌI SERVER THẬT <<<
     private static final boolean IS_MOCK = false; // Đổi thành true để test không cần server
 
-    // 1. Hàm Đăng Nhập (Login) - Hỗ trợ cả Username và Email
+    // Hàm Đăng Nhập (Login) - Hỗ trợ cả Username và Email
     public static LoginResponse login(String usernameOrEmail, String password) throws Exception {
         if (IS_MOCK) {
             // Mock mode: Chấp nhận bất kỳ username/password nào
@@ -89,7 +89,7 @@ public class AuthApi {
                 System.out.println("⚠ Không tìm thấy fullName, dùng usernameOrEmail: " + usernameOrEmail);
             }
             
-            // 3.5 Lưu username (có thể là email nếu user dùng email để login)
+            // Lưu username (có thể là email nếu user dùng email để login)
             if (responseJson.contains("\"username\"")) {
                 String[] usernameParts = responseJson.split("\"username\":");
                 if (usernameParts.length > 1) {
@@ -130,7 +130,7 @@ public class AuthApi {
         }
     }
 
-    // 2. Hàm Đăng Ký (Register)
+    // Hàm Đăng Ký (Register)
     public static void register(String username, String password, String email, String fullName) throws Exception {
         String jsonBody = String.format(
             "{\"username\": \"%s\", \"password\": \"%s\", \"email\": \"%s\", \"fullName\": \"%s\", \"role\": \"MEMBER\"}",

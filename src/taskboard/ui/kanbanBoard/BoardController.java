@@ -29,7 +29,7 @@ public class BoardController {
 
     private Long currentProjectId; // ID dự án hiện tại
 
-    // Gọi hàm này khi chuyển màn hình để set Project ID và load dữ liệu
+    // Hàm này khi chuyển màn hình để set Project ID và load dữ liệu
     public void setProjectId(Long projectId) {
         this.currentProjectId = projectId;
         

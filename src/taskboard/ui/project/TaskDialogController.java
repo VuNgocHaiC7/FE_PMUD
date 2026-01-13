@@ -212,7 +212,7 @@ public class TaskDialogController {
                     }
                 }
             }
-            // Fallback: nếu chỉ có một assignee (tương thích code cũ)
+            // Fallback: nếu chỉ có một assignee 
             else if (task.getAssignee() != null && !task.getAssignee().isEmpty()) {
                 for (UserDTO user : lvAssignees.getItems()) {
                     if (user.getFullName().equals(task.getAssignee())) {

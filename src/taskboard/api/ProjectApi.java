@@ -25,7 +25,7 @@ public class ProjectApi {
         mockProjects.add(new ProjectDTO(2L, "Mobile App", "App quản lý kho", LocalDate.now().minusDays(10), LocalDate.now().plusDays(10), "PLANNING", "Project Manager Mock"));
     }
 
-    // 1. GET /api/projects - Xem danh sách Project
+    // GET /api/projects - Xem danh sách Project
     public static List<ProjectDTO> getProjects() throws Exception {
         if (IS_MOCK) {
             return new ArrayList<>(mockProjects);
@@ -35,7 +35,7 @@ public class ProjectApi {
         }
     }
 
-    // 1b. GET /api/projects (với filter)
+    // GET /api/projects (với filter)
     public static List<ProjectDTO> getProjects(String keyword, String status) throws Exception {
         if (IS_MOCK) {
             return mockProjects.stream().filter(p -> {
@@ -73,7 +73,7 @@ public class ProjectApi {
         }
     }
 
-    // 2. POST /api/projects - Tạo Project mới
+    // POST /api/projects - Tạo Project mới
     public static ProjectDTO createProject(ProjectDTO project) throws Exception {
         if (IS_MOCK) {
             project.setId((long) (mockProjects.size() + 1));
@@ -102,7 +102,7 @@ public class ProjectApi {
         }
     }
 
-    // 3. PUT /api/projects/{id} - Sửa tên, mô tả, ngày tháng của dự án (Chỉ Admin)
+    // PUT /api/projects/{id} - Sửa tên, mô tả, ngày tháng của dự án (Chỉ Admin)
     public static void updateProject(ProjectDTO project) throws Exception {
         if (IS_MOCK) {
             for (int i = 0; i < mockProjects.size(); i++) {
@@ -132,7 +132,7 @@ public class ProjectApi {
         }
     }
 
-    // 4. POST /api/projects/{id}/members - Thêm Member
+    // POST /api/projects/{id}/members - Thêm Member
     public static void addMember(Long projectId, int userId) throws Exception {
         if (IS_MOCK) {
             UserDTO user = new UserDTO(userId, "user" + userId, "User " + userId, "user@example.com", "MEMBER", "Active");
@@ -144,7 +144,7 @@ public class ProjectApi {
         }
     }
 
-    // 5. DELETE /api/projects/{id}/members/{userId} - Xóa một thành viên ra khỏi dự án
+    // DELETE /api/projects/{id}/members/{userId} - Xóa một thành viên ra khỏi dự án
     public static void removeMember(Long projectId, int userId) throws Exception {
         if (IS_MOCK) {
             boolean removed = mockMembers.removeIf(user -> user.getId() == userId);
@@ -156,7 +156,7 @@ public class ProjectApi {
         }
     }
 
-    // 6. Lấy danh sách thành viên của Project (BONUS)
+    // Lấy danh sách thành viên của Project (BONUS)
     public static List<UserDTO> getProjectMembers(Long projectId) throws Exception {
         if (IS_MOCK) {
             if (mockMembers.isEmpty()) {
@@ -170,7 +170,7 @@ public class ProjectApi {
         }
     }
 
-    // 7. Xóa Project (BONUS)
+    // Xóa Project (BONUS)
     public static void deleteProject(Long projectId) throws Exception {
         if (IS_MOCK) {
             boolean removed = mockProjects.removeIf(project -> project.getId().equals(projectId));

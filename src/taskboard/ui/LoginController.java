@@ -41,17 +41,17 @@ public class LoginController {
         String usernameOrEmail = usernameField.getText().trim();
         String password = passwordField.getText();
 
-        // 1. Validate đầu vào
+        // Validate đầu vào
         if (usernameOrEmail.isEmpty() || password.isEmpty()) {
             showAlert("Lỗi", "Vui lòng nhập đầy đủ thông tin!", AlertType.WARNING);
             return;
         }
 
         try {
-            // 2. GỌI API: POST /api/auth/login (hỗ trợ cả username và email)
+            // GỌI API: POST /api/auth/login (username và email)
             LoginResponse response = AuthApi.login(usernameOrEmail, password);
 
-            // 3. XỬ LÝ THÀNH CÔNG:
+            // XỬ LÝ THÀNH CÔNG:
             // - Lưu Token và FullName vào biến toàn cục (Session)
             AuthContext.getInstance().setToken(response.token);
             AuthContext.getInstance().setUserId(response.userId);            AuthContext.getInstance().setUsername(response.username);            AuthContext.getInstance().setFullName(response.fullName);
@@ -61,10 +61,7 @@ public class LoginController {
             System.out.println("  User: " + response.fullName);
             System.out.println("  Roles: " + response.roles);
 
-            // 4. Kiểm tra Role để phân quyền (nếu cần)
-            // Có thể dùng để hiển thị menu khác nhau cho Admin/PM/Member
-
-            // 5. Chuyển sang màn hình Danh sách dự án (MainView)
+            // Chuyển sang màn hình Danh sách dự án (MainView)
             switchToMainView();
 
         } catch (Exception e) {
@@ -84,12 +81,12 @@ public class LoginController {
             Parent mainRoot = loader.load();
             System.out.println(">>> Load FXML thành công!");
 
-            // 1. Đóng cửa sổ Login cũ lại
+            // Đóng cửa sổ Login cũ lại
             Stage oldStage = (Stage) loginButton.getScene().getWindow();
             oldStage.close();
             System.out.println(">>> Đã đóng cửa sổ login cũ");
 
-            // 2. Tạo cửa sổ mới cho Main App
+            // Tạo cửa sổ mới cho Main App
             Stage newStage = new Stage();
             newStage.setScene(new Scene(mainRoot));
             newStage.setTitle("TaskBoard - Hệ thống quản lý công việc");

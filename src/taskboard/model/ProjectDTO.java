@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class ProjectDTO {
     private Long id;
     private String name;
-    private String projectCode; // Mã dự án
+    private String projectCode; 
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;

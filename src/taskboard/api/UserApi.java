@@ -20,7 +20,7 @@ public class UserApi {
     }
     private static int idCounter = 4; 
 
-    // 1. GET /api/users - Lấy danh sách tất cả người dùng
+    // GET /api/users - Lấy danh sách tất cả người dùng
     public static List<UserDTO> getAllUsers() throws Exception {
         if (IS_MOCK) {
             Thread.sleep(200);
@@ -31,7 +31,7 @@ public class UserApi {
         }
     }
 
-    // 2. GET /api/users (với keyword tìm kiếm)
+    // GET /api/users (với keyword tìm kiếm)
     public static List<UserDTO> getAllUsers(String keyword) throws Exception {
         if (IS_MOCK) {
             Thread.sleep(200);
@@ -59,7 +59,7 @@ public class UserApi {
         }
     }
 
-    // 3. POST /api/users - Admin tạo User mới
+    // POST /api/users - Admin tạo User mới
     public static void createUser(UserDTO newUser) throws Exception {
         if (IS_MOCK) {
             boolean exists = mockDb.stream().anyMatch(u -> u.getUsername().equals(newUser.getUsername()));
@@ -88,7 +88,7 @@ public class UserApi {
         }
     }
 
-    // 4. PUT /api/users/{id}/role - Admin thay đổi quyền hạn của User
+    // PUT /api/users/{id}/role - Admin thay đổi quyền hạn của User
     public static void updateUserRole(int userId, String newRole) throws Exception {
         if (IS_MOCK) {
             for (UserDTO u : mockDb) {
@@ -105,7 +105,7 @@ public class UserApi {
         }
     }
 
-    // 5. PUT /api/users/{id}/status - Khóa hoặc Mở khóa user theo ID (Toggle)
+    // PUT /api/users/{id}/status - Khóa hoặc Mở khóa user theo ID (Toggle)
     public static void updateUserStatus(int userId, String newStatus) throws Exception {
         if (IS_MOCK) {
             for (UserDTO u : mockDb) {
@@ -128,7 +128,7 @@ public class UserApi {
         updateUserStatus(userId, newStatus);
     }
 
-    // 6. Cập nhật thông tin User (BONUS - nếu cần)
+    // Cập nhật thông tin User (BONUS - nếu cần)
     public static void updateUser(UserDTO updatedUser) throws Exception {
         if (IS_MOCK) {
             for (UserDTO u : mockDb) {
@@ -152,7 +152,7 @@ public class UserApi {
         }
     }
     
-    // 6. DELETE /api/users/{id} - Xóa người dùng (Chỉ admin)
+    // DELETE /api/users/{id} - Xóa người dùng (Chỉ admin)
     public static void deleteUser(int userId) throws Exception {
         if (IS_MOCK) {
             mockDb.removeIf(user -> user.getId() == userId);

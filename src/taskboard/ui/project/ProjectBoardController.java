@@ -74,7 +74,7 @@ public class ProjectBoardController {
             configureCellFactory(lvDoing);
             configureCellFactory(lvDone);
 
-            // Thêm context menu (click chuột phải) để Sửa/Xóa task
+            // context menu click chuột phải để Sửa/Xóa task
             setupContextMenu(lvTodo);
             setupContextMenu(lvDoing);
             setupContextMenu(lvDone);

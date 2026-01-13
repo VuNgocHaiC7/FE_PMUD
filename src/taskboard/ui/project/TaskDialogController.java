@@ -263,8 +263,16 @@ public class TaskDialogController {
         currentTask.setDescription(txtDescription.getText() != null ? txtDescription.getText().trim() : "");
         currentTask.setStatus(statusToEnglish(cbStatus.getValue()));
         
-        // Lấy danh sách người được giao (cho phép nhiều người)
-        List<UserDTO> selectedUsers = lvAssignees.getSelectionModel().getSelectedItems();
+        // Lấy TOÀN BỘ danh sách người được chọn trong ListView (không phải getSelectedItems)
+        // getSelectedItems() chỉ trả về items đang được highlight, không phải tất cả
+        List<UserDTO> selectedUsers = new ArrayList<>(lvAssignees.getSelectionModel().getSelectedItems());
+        
+        System.out.println("=== SAVE TASK DEBUG ===");
+        System.out.println("Selected users count: " + selectedUsers.size());
+        for (UserDTO u : selectedUsers) {
+            System.out.println("  - " + u.getFullName() + " (ID: " + u.getId() + ")");
+        }
+        
         if (selectedUsers != null && !selectedUsers.isEmpty()) {
             List<Long> assigneeIds = selectedUsers.stream()
                 .map(u -> (long) u.getId())
@@ -279,26 +287,34 @@ public class TaskDialogController {
             // Để tương thích với code cũ, set assignee đầu tiên
             currentTask.setAssignee(assigneeNames.get(0));
             currentTask.setAssigneeId(assigneeIds.get(0));
+            
+            System.out.println("AssigneeIds being sent: " + assigneeIds);
         } else {
+            // Nếu không có ai được chọn, gửi danh sách rỗng
             currentTask.setAssigneeIds(new ArrayList<>());
             currentTask.setAssigneeNames(new ArrayList<>());
             currentTask.setAssignee("");
             currentTask.setAssigneeId(null);
+            
+            System.out.println("No assignees selected - sending empty list");
         }
 
         // Lưu task qua API
         try {
             if (currentTask.getId() == null || currentTask.getId() == 0L) {
                 // GỌI API: POST /api/tasks (Tạo task mới - Chỉ Admin)
+                System.out.println("Creating new task...");
                 TaskApi.createTask(currentTask);
             } else {
                 // GỌI API: PUT /api/tasks/{id} (Cập nhật task - Chỉ Admin)
+                System.out.println("Updating task ID: " + currentTask.getId());
                 TaskApi.updateTask(currentTask);
             }
             saved = true;
             notifyTaskSaved();
             closeWindow();
         } catch (Exception e) {
+            e.printStackTrace();
             showAlert("Lỗi", "Không thể lưu task: " + e.getMessage());
         }
     }

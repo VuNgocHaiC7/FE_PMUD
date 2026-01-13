@@ -137,6 +137,14 @@ public class ProjectDetailController {
             showAlert("Lỗi", "Vui lòng nhập mã dự án!");
             return;
         }
+        
+        // Validate ngày bắt đầu và ngày kết thúc
+        if (dpStart.getValue() != null && dpEnd.getValue() != null) {
+            if (dpStart.getValue().isAfter(dpEnd.getValue())) {
+                showAlert("Lỗi", "Ngày bắt đầu không được sau ngày kết thúc!\nVui lòng kiểm tra lại thông tin.");
+                return;
+            }
+        }
 
         if (currentProject == null) currentProject = new ProjectDTO();
         
@@ -164,7 +172,20 @@ public class ProjectDetailController {
             showAlert("Thành công", "Đã lưu dự án!");
             closeWindow();
         } catch (Exception e) {
-            showAlert("Thất bại", "Lỗi khi lưu dự án: " + e.getMessage());
+            e.printStackTrace();
+            String errorMessage = e.getMessage();
+            
+            // Kiểm tra loại lỗi để hiển thị thông báo phù hợp
+            if (errorMessage != null && errorMessage.contains("Mã dự án")) {
+                // Lỗi trùng mã dự án
+                showAlert("Lỗi - Trùng mã dự án", errorMessage);
+            } else if (errorMessage != null && errorMessage.contains("already exists")) {
+                // Lỗi trùng (tiếng Anh)
+                showAlert("Lỗi - Trùng mã dự án", "Mã dự án '" + txtProjectCode.getText() + "' đã tồn tại. Vui lòng chọn mã khác!");
+            } else {
+                // Lỗi khác
+                showAlert("Thất bại", "Lỗi khi lưu dự án: " + errorMessage);
+            }
         }
     }
 

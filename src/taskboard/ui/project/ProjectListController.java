@@ -402,7 +402,19 @@ public class ProjectListController {
             
             int row = 0;
             
+            // Mã dự án
+            Label lblCodeTitle = new Label("🔖 Mã dự án:");
+            lblCodeTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;");
+            Label lblCodeValue = new Label(
+                project.getProjectCode() != null && !project.getProjectCode().isEmpty() 
+                    ? project.getProjectCode() : "(Chưa có mã)"
+            );
+            lblCodeValue.setStyle("-fx-font-size: 13px; -fx-text-fill: #2d3748; -fx-font-weight: 600;");
+            grid.add(lblCodeTitle, 0, row);
+            grid.add(lblCodeValue, 1, row);
+            
             // Mô tả
+            row++;
             Label lblDescTitle = new Label("📝 Mô tả:");
             lblDescTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #4a5568;");
             TextArea txtDesc = new TextArea(

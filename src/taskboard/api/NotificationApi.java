@@ -12,41 +12,33 @@ import java.util.List;
 public class NotificationApi {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_DATE_TIME;
 
-    /**
-     * Lấy tất cả notifications chưa đọc
-     */
+
+    //Lấy tất cả notifications chưa đọc
     public static List<NotificationDTO> getUnreadNotifications() throws Exception {
         String response = ApiClient.get("/notifications/unread");
         return parseNotificationList(response);
     }
 
-    /**
-     * Lấy tất cả notifications
-     */
+
+    //Lấy tất cả notifications
     public static List<NotificationDTO> getAllNotifications() throws Exception {
         String response = ApiClient.get("/notifications");
         return parseNotificationList(response);
     }
 
-    /**
-     * Đếm số notifications chưa đọc
-     */
+    //Đếm số notifications chưa đọc
     public static long getUnreadCount() throws Exception {
         String response = ApiClient.get("/notifications/count");
         JSONObject jsonObject = new JSONObject(response);
         return jsonObject.getLong("count");
     }
 
-    /**
-     * Đánh dấu một notification là đã đọc
-     */
+    //Đánh dấu một notification là đã đọc
     public static void markAsRead(Long notificationId) throws Exception {
         ApiClient.put("/notifications/" + notificationId + "/read", "");
     }
 
-    /**
-     * Đánh dấu tất cả là đã đọc
-     */
+    //Đánh dấu tất cả là đã đọc
     public static void markAllAsRead() throws Exception {
         ApiClient.put("/notifications/read-all", "");
     }

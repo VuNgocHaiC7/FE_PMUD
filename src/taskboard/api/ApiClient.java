@@ -8,11 +8,10 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 public class ApiClient {
-    // >>> CẬP NHẬT ĐỊA CHỈ SERVER MỚI <<<
-    // Lưu ý:lấy phần gốc là ".../tms/api", các phần sau sẽ là endpoint
+    // >>> CẬP NHẬT ĐỊA CHỈ SERVER <<<
+    // Phần gốc là ".../tms/api", các phần sau sẽ là endpoint
     private static final String BASE_URL = "https://miki-untactical-instrumentally.ngrok-free.dev/api";
     
-    // ... (Phần code còn lại giữ nguyên không đổi) ...
     private static final HttpClient client = HttpClient.newBuilder()
             .version(HttpClient.Version.HTTP_2)
             .connectTimeout(Duration.ofSeconds(10))
@@ -73,7 +72,7 @@ public class ApiClient {
             System.err.println("[ApiClient] ERROR 403: Forbidden - " + response.body());
             throw new RuntimeException("Không có quyền thực hiện thao tác này: " + response.body());
         } else {
-            // In ra body lỗi để dễ debug
+            // In ra body lỗi để debug
             System.err.println("[ApiClient] ERROR " + response.statusCode() + ": " + response.body());
             throw new RuntimeException("Server Error (" + response.statusCode() + "): " + response.body());
         }

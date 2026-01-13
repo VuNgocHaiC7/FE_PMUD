@@ -21,12 +21,12 @@ public class UserDTO {
         this.status = new SimpleStringProperty(status);
     }
     
-    // Constructor rỗng (Cần thiết sau này nếu dùng thư viện Jackson để parse JSON)
+    // Constructor rỗng (Cần thiết nếu dùng thư viện Jackson để parse JSON)
     public UserDTO() {
         this(0, "", "", "", "", "");
     }
 
-    // --- 1. GETTERS TRẢ VỀ PROPERTY (Dùng cho TableView - cellValueFactory) ---
+    // ---GETTERS TRẢ VỀ PROPERTY (Dùng cho TableView - cellValueFactory) ---
     public IntegerProperty idProperty() { return id; }
     public StringProperty usernameProperty() { return username; }
     public StringProperty fullNameProperty() { return fullName; }
@@ -38,8 +38,6 @@ public class UserDTO {
     public int getId() { return id.get(); }
     public String getUsername() { return username.get(); }
     public String getFullName() { return fullName.get(); }
-    
-    // >>> ĐÃ BỔ SUNG THÊM <<<
     public String getEmail() { return email.get(); }
     public String getRole() { return role.get(); }
     public String getStatus() { return status.get(); }

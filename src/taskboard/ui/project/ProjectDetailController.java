@@ -29,10 +29,10 @@ public class ProjectDetailController {
     public void initialize() {
         System.out.println("DEBUG: ProjectDetailController.initialize() được gọi");
         
-        // 1. Khởi tạo danh sách trạng thái (hiển thị tiếng Việt)
+        // Khởi tạo danh sách trạng thái hiển thị tiếng Việt
         cbStatus.setItems(FXCollections.observableArrayList("ĐANG HOẠT ĐỘNG", "HOÀN THÀNH", "ĐÃ ĐÓNG"));
 
-        // 2. Tạo Menu chuột phải cho Danh sách thành viên để XÓA
+        // Tạo Menu chuột phải cho Danh sách thành viên để XÓA
         ContextMenu contextMenu = new ContextMenu();
         MenuItem deleteItem = new MenuItem("Xóa thành viên này");
         deleteItem.setOnAction(event -> handleRemoveMember());
@@ -41,7 +41,7 @@ public class ProjectDetailController {
         // Gán menu này vào ListView
         lvMembers.setContextMenu(contextMenu);
         
-        // 3. Cấu hình hiển thị cho ComboBox và ListView
+        // Cấu hình hiển thị cho ComboBox và ListView
         cbAllUsers.setCellFactory(lv -> new javafx.scene.control.ListCell<UserDTO>() {
             @Override
             protected void updateItem(UserDTO user, boolean empty) {
@@ -180,7 +180,7 @@ public class ProjectDetailController {
                 // Lỗi trùng mã dự án
                 showAlert("Lỗi - Trùng mã dự án", errorMessage);
             } else if (errorMessage != null && errorMessage.contains("already exists")) {
-                // Lỗi trùng (tiếng Anh)
+                // Lỗi trùng
                 showAlert("Lỗi - Trùng mã dự án", "Mã dự án '" + txtProjectCode.getText() + "' đã tồn tại. Vui lòng chọn mã khác!");
             } else {
                 // Lỗi khác
@@ -266,7 +266,7 @@ public class ProjectDetailController {
         alert.showAndWait();
     }
     
-    // Hàm chuyển đổi trạng thái từ tiếng Anh sang tiếng Việt
+    // Hàm chuyển đổi tiếng Việt
     private String convertStatusToVietnamese(String englishStatus) {
         if (englishStatus == null) return "ĐANG HOẠT ĐỘNG";
         switch (englishStatus) {
@@ -281,7 +281,7 @@ public class ProjectDetailController {
         }
     }
     
-    // Hàm chuyển đổi trạng thái từ tiếng Việt sang tiếng Anh
+    // Hàm chuyển đổi tiếng Anh
     private String convertStatusToEnglish(String vietnameseStatus) {
         if (vietnameseStatus == null) return "ACTIVE";
         switch (vietnameseStatus) {

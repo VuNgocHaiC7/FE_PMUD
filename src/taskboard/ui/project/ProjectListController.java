@@ -195,7 +195,6 @@ public class ProjectListController {
     }
 
     // --- CÁC HÀM XỬ LÝ ---
-
     @FXML
     private void handleNewProject() {
         // Mở dialog tạo dự án mới (riêng biệt với dialog sửa)

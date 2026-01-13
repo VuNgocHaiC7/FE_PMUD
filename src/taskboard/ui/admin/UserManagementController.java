@@ -140,7 +140,6 @@ public class UserManagementController {
             }
         });
 
-        // [QUAN TRỌNG - THÊM DÒNG NÀY] 
         // Gán giá trị cho cột Action là chính đối tượng UserDTO
         // Điều này giúp hàm addActionsColumn nhận được dữ liệu "UserDTO" thay vì "Void"
         colAction.setCellValueFactory(param -> new SimpleObjectProperty<>(param.getValue()));
@@ -275,15 +274,14 @@ public class UserManagementController {
                 btnDelete.setManaged(canDelete);
 
                 String status = (user.getStatus() == null) ? "" : user.getStatus().trim();
-                
-                // --- THÊM DÒNG NÀY ĐỂ DEBUG ---
-                // Nhìn vào Console khi chạy để xem nó in ra gì
+
+                // Console 
                 System.out.println("User: " + user.getUsername() + " | Status: [" + status + "]");
 
                 btnLock.getStyleClass().clear();
                 btnLock.getStyleClass().add("table-btn");
 
-                // Logic: Nếu đang Active -> Phải hiện nút LOCK (Màu đỏ) để người dùng bấm vào khóa
+                // Nếu đang Active -> Phải hiện nút LOCK (Màu đỏ) để người dùng bấm vào khóa
                 if ("Active".equalsIgnoreCase(status)) {
                     btnLock.setText("Khóa");
                     btnLock.getStyleClass().add("btn-lock");
